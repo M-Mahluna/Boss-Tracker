@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Mahluna – Boss Tracker</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap');
+
+body{
+    margin:0;
+    background:white;
+    display:flex;
+    justify-content:center;
+    font-family: Georgia, serif;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:50px 0;
+    background: rgba(0,0,0,0.85);
+    color:#eee;
+    padding:30px;
+    border-radius:20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+    text-align:center;
+}
+
+h1{
+    font-size:3.5rem;
+    color:#ff4444;
+    text-shadow:0 0 25px crimson;
+    font-family: 'Uncial Antiqua', serif;
+    margin-bottom:60px;
+}
+
+.game-title{
+    font-size:2.6rem;
+    margin-top:60px;
+    border-bottom:4px solid crimson;
+    padding-bottom:12px;
+    color:#ff7777;
+    font-family: 'Uncial Antiqua', serif;
+}
+
+.section-title{
+    font-size:2rem;
+    margin-top:30px;
+    color:#ff9999;
+}
+
+.progress-container{
+    width:90%;
+    background:#333;
+    border-radius:12px;
+    margin:15px auto;
+    position: relative;
+    height:30px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#00ff99;
+    transition: width 1s ease-in-out;
+}
+
+.progress-text{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:0;
+    left:0;
+    font-weight:bold;
+    line-height:30px;
+    color:#fff;
+}
+
+.boss{
+    margin:6px 0;
+    font-size:1.2rem;
+}
+
+.done{
+    color:#00ff99;
+}
+
+.notdone{
+    color:#ff6666;
+}
+
+.deaths{
+    font-size:1.4rem;
+    margin-top:10px;
+    color:#ffee33;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Mahluna's Boss Progress</h1>
+<div id="content"></div>
+</div>
+
+<script>
+
+
+const games = {
+
+bloodborne: {
+    name: "Bloodborne",
+    deaths: 0,   // ← HIER TODE ÄNDERN
+    sections: [
+        {
+            name:"Hauptspiel",
+            bosses:[
+                {name:"Cleric Beast", completed:false},
+                {name:"Father Gascoigne", completed:false},
+                {name:"Blood-starved Beast", completed:false},
+                {name:"Vicar Amelia", completed:false},
+                {name:"Witch of Hemwick", completed:false},
+                {name:"Darkbeast Paarl", completed:false},
+                {name:"Shadow of Yharnam", completed:false},
+                {name:"Rom, the Vacuous Spider", completed:false},
+                {name:"The One Reborn", completed:false},
+                {name:"Micolash, Host of the Nightmare", completed:false},
+                {name:"Celestial Emissary", completed:false},
+                {name:"Ebrietas, Daughter of the Cosmos", completed:false},
+                {name:"Martyr Logarius", completed:false},
+                {name:"Amygdala", completed:false},
+                {name:"Mergo's Wet Nurse", completed:false},
+                {name:"Gehrman, the First Hunter", completed:false},
+                {name:"Moon Presence", completed:false}
+            ]
+        },
+        {
+            name:"DLC The Old Hunters",
+            bosses:[
+                {name:"Ludwig, The Holy Blade", completed:false},
+                {name:"Laurence, the First Vicar", completed:false},
+                {name:"Living Failures", completed:false},
+                {name:"Lady Maria of the Astral Clocktower", completed:false},
+                {name:"Orphan of Kos", completed:false}
+            ]
+        }
+    ]
+},
+
+eldenring: {
+    name:"Elden Ring",
+    deaths: 0,   // ← HIER TODE ÄNDERN
+    sections: [
+        {
+            name:"Hauptspiel",
+            bosses:[
+                {name:"Margit, the Fell Omen", completed:true},
+                {name:"Godrick the Grafted", completed:false},
+                {name:"Rennala, Queen of the Full Moon", completed:false},
+                {name:"Starscourge Radahn", completed:false},
+                {name:"Rykard, Lord of Blasphemy", completed:false},
+                {name:"Morgott, the Omen King", completed:false},
+                {name:"Fire Giant", completed:false},
+                {name:"Godfrey / Hoarah Loux", completed:false},
+                {name:"Radagon of the Golden Order", completed:false},
+                {name:"Elden Beast", completed:false},
+                {name:"Malenia, Blade of Miquella", completed:false},
+                {name:"Mohg, Lord of Blood", completed:false},
+                {name:"Maliketh, the Black Blade", completed:false},
+                {name:"Godskin Duo", completed:false},
+                {name:"Draconic Tree Sentinel", completed:false},
+                {name:"Godfrey, First Eldenlord", completed:false},
+                {name:"Sir Gideon Ofnir, the All-Knowing", completed:false}
+                 
+            ]
+        },
+{
+            name:"DLC",
+            bosses:[
+                {name:"?", completed:false},
+                {name:"?", completed:false},
+                {name:"?", completed:false},
+                {name:"?", completed:false},
+                {name:"?", completed:false}
+            ]
+        }
+
+    ]
+}
+
+};
+
+function createGame(gameKey){
+    const game = games[gameKey];
+    const container = document.createElement("div");
+
+    // Spieltitel
+    const title = document.createElement("div");
+    title.className="game-title";
+    title.innerText=game.name;
+    container.appendChild(title);
+
+    // Todesanzeige
+    const deathDiv = document.createElement("div");
+    deathDiv.className="deaths";
+    deathDiv.innerText="Tode insgesamt: " + game.deaths;
+    container.appendChild(deathDiv);
+
+    // Funktion um Balken zu erstellen
+    function createProgressBar(percent){
+        const bar=document.createElement("div");
+        bar.className="progress-container";
+
+        const fill=document.createElement("div");
+        fill.className="progress-fill";
+        fill.style.width=percent+"%";
+
+        const text=document.createElement("div");
+        text.className="progress-text";
+        text.innerText=percent+"%";
+
+        bar.appendChild(fill);
+        bar.appendChild(text);
+        return bar;
+    }
+
+    let totalDone=0,totalCount=0;
+
+    // Gesamtfortschritt zuerst berechnen
+    game.sections.forEach(section=>{
+        totalDone += section.bosses.filter(b=>b.completed).length;
+        totalCount += section.bosses.length;
+    });
+
+    const totalPercent = Math.round((totalDone/totalCount)*100);
+    const totalTitle = document.createElement("div");
+    totalTitle.className="section-title";
+    totalTitle.innerText="Gesamtfortschritt";
+    container.appendChild(totalTitle);
+    container.appendChild(createProgressBar(totalPercent));
+
+    // Abschnitts-Fortschritt
+    game.sections.forEach(section=>{
+        const sectionDone = section.bosses.filter(b=>b.completed).length;
+        const sectionTotal = section.bosses.length;
+
+        const sectionPercent = Math.round((sectionDone/sectionTotal)*100);
+
+        // Abschnittstitel
+        const sectionTitle=document.createElement("div");
+        sectionTitle.className="section-title";
+        sectionTitle.innerText=section.name;
+        container.appendChild(sectionTitle);
+
+        // Abschnittsbalken
+        container.appendChild(createProgressBar(sectionPercent));
+
+        // Bossliste
+        section.bosses
+            .sort((a,b)=> b.completed - a.completed)
+            .forEach(boss=>{
+                const div=document.createElement("div");
+                div.className="boss " + (boss.completed ? "done" : "notdone");
+                div.innerText = (boss.completed ? "✔ " : "✖ ") + boss.name;
+                container.appendChild(div);
+            });
+    });
+
+    document.getElementById("content").appendChild(container);
+}
+
+createGame("bloodborne");
+createGame("eldenring");
+
+</script>
+
+</body>
+</html>
+
