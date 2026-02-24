@@ -108,6 +108,15 @@ h1{
     text-shadow: 0 0 8px crimson;
     cursor: pointer;
 }
+.preview-img{
+    position: absolute;
+    width: 260px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    pointer-events: none;
+    display: none;
+    z-index: 1000;
+}
 </style>
 </head>
 <body>
@@ -502,28 +511,81 @@ function createGame(gameKey){
         container.appendChild(createProgressBar(sectionPercent));
 
         // Bossliste
-       section.bosses
+      section.bosses
     .sort((a,b)=> b.completed - a.completed)
     .forEach(boss=>{
 
         const div = document.createElement("div");
         div.className = "boss " + (boss.completed ? "done" : "notdone");
 
-        // Wenn Clip existiert → klickbarer Link
         if(boss.clip){
+
             const link = document.createElement("a");
             link.href = boss.clip;
             link.target = "_blank";
             link.className = "boss-link";
             link.innerText = (boss.completed ? "✔ " : "✖ ") + boss.name;
+
+            let previewSrc = null;
+
+            // 🔴 YOUTUBE automatisch
+            if(boss.clip.includes("youtube") || boss.clip.includes("youtu.be")){
+
+                function getYouTubeID(url){
+                    try {
+                        const parsedUrl = new URL(url);
+                        if(parsedUrl.hostname.includes("youtube.com")){
+                            return parsedUrl.searchParams.get("v");
+                        }
+                        if(parsedUrl.hostname.includes("youtu.be")){
+                            return parsedUrl.pathname.split("/")[1];
+                        }
+                    } catch(e){
+                        return null;
+                    }
+                    return null;
+                }
+
+                const videoID = getYouTubeID(boss.clip);
+
+                if(videoID){
+                    previewSrc = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg";
+                }
+            }
+
+            // 🟣 TWITCH oder manuelles Bild
+            if(boss.thumbnail){
+                previewSrc = boss.thumbnail;
+            }
+
+            // Wenn Preview existiert → Hover aktivieren
+            if(previewSrc){
+
+                const preview = document.createElement("img");
+                preview.className = "preview-img";
+                preview.src = previewSrc;
+
+                document.body.appendChild(preview);
+
+                link.addEventListener("mousemove", e => {
+                    preview.style.display = "block";
+                    preview.style.left = e.pageX + 20 + "px";
+                    preview.style.top = e.pageY + 20 + "px";
+                });
+
+                link.addEventListener("mouseleave", () => {
+                    preview.style.display = "none";
+                });
+            }
+
             div.appendChild(link);
+
         } else {
             div.innerText = (boss.completed ? "✔ " : "✖ ") + boss.name;
         }
 
         container.appendChild(div);
     });
-
 
     });
 
