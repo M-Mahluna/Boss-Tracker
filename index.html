@@ -602,31 +602,46 @@ function createGame(gameKey){
             }
 
             div.appendChild(link);
-if(boss.completed && boss.clip &&
-   (boss.clip.includes("youtube") || boss.clip.includes("youtu.be"))){
+if(boss.completed && boss.clip){
 
-    function getYouTubeID(url){
-        try{
-            const parsedUrl = new URL(url);
-            if(parsedUrl.hostname.includes("youtube.com")){
-                return parsedUrl.searchParams.get("v");
-            }
-            if(parsedUrl.hostname.includes("youtu.be")){
-                return parsedUrl.pathname.split("/")[1];
-            }
-        }catch(e){ return null; }
-        return null;
+    let previewSrc = null;
+
+    //  1. Eigenes Bild hat IMMER Vorrang
+    if(boss.thumbnail){
+        previewSrc = boss.thumbnail;
     }
 
-    const videoID = getYouTubeID(boss.clip);
+    //  2. Sonst YouTube automatisch
+    else if(boss.clip.includes("youtube") || boss.clip.includes("youtu.be")){
 
-    if(videoID){
+        function getYouTubeID(url){
+            try{
+                const parsedUrl = new URL(url);
+                if(parsedUrl.hostname.includes("youtube.com")){
+                    return parsedUrl.searchParams.get("v");
+                }
+                if(parsedUrl.hostname.includes("youtu.be")){
+                    return parsedUrl.pathname.split("/")[1];
+                }
+            }catch(e){ return null; }
+            return null;
+        }
+
+        const videoID = getYouTubeID(boss.clip);
+
+        if(videoID){
+            previewSrc = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg";
+        }
+    }
+
+    //  3. Wenn wir ein Bild haben → Hover bauen
+    if(previewSrc){
 
         const previewBox = document.createElement("div");
         previewBox.className = "preview-box";
 
         const previewImg = document.createElement("img");
-        previewImg.src = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg";
+        previewImg.src = previewSrc;
 
         const deathText = document.createElement("div");
         deathText.className = "preview-deaths";
