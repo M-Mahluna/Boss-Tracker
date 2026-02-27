@@ -551,7 +551,6 @@ function createGame(gameKey){
 
             let previewSrc = null;
 
-            // 🔴 YOUTUBE automatisch
             if(boss.clip.includes("youtube") || boss.clip.includes("youtu.be")){
 
                 function getYouTubeID(url){
@@ -576,7 +575,7 @@ function createGame(gameKey){
                 }
             }
 
-            // 🟣 TWITCH oder manuelles Bild
+           
             if(boss.thumbnail){
                 previewSrc = boss.thumbnail;
             }
