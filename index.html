@@ -117,6 +117,29 @@ h1{
     display: none;
     z-index: 1000;
 }
+.preview-box{
+    position:absolute;
+    display:none;
+    z-index:1000;
+    pointer-events:none;
+}
+
+.preview-box img{
+    width:260px;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    display:block;
+}
+
+.preview-deaths{
+    background:#111;
+    color:#fff;
+    padding:6px 10px;
+    font-size:14px;
+    text-align:center;
+    border-radius:0 0 10px 10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.6);
+}
 </style>
 </head>
 <body>
@@ -579,6 +602,51 @@ function createGame(gameKey){
             }
 
             div.appendChild(link);
+if(boss.completed && boss.clip &&
+   (boss.clip.includes("youtube") || boss.clip.includes("youtu.be"))){
+
+    function getYouTubeID(url){
+        try{
+            const parsedUrl = new URL(url);
+            if(parsedUrl.hostname.includes("youtube.com")){
+                return parsedUrl.searchParams.get("v");
+            }
+            if(parsedUrl.hostname.includes("youtu.be")){
+                return parsedUrl.pathname.split("/")[1];
+            }
+        }catch(e){ return null; }
+        return null;
+    }
+
+    const videoID = getYouTubeID(boss.clip);
+
+    if(videoID){
+
+        const previewBox = document.createElement("div");
+        previewBox.className = "preview-box";
+
+        const previewImg = document.createElement("img");
+        previewImg.src = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg";
+
+        const deathText = document.createElement("div");
+        deathText.className = "preview-deaths";
+        deathText.innerText = "Tode: " + boss.deaths;
+
+        previewBox.appendChild(previewImg);
+        previewBox.appendChild(deathText);
+        document.body.appendChild(previewBox);
+
+        link.addEventListener("mousemove", e => {
+            previewBox.style.display = "block";
+            previewBox.style.left = e.pageX + 20 + "px";
+            previewBox.style.top = e.pageY + 20 + "px";
+        });
+
+        link.addEventListener("mouseleave", () => {
+            previewBox.style.display = "none";
+        });
+    }
+}
 
         } else {
             div.innerText = (boss.completed ? "✔ " : "✖ ") + boss.name;
