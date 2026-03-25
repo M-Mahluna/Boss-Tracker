@@ -9,19 +9,18 @@
 
 body{
     margin:0;
-    background:white;
+    background:#0f0f0f;
     display:flex;
     justify-content:center;
     font-family: 'Cormorant Garamond', serif;
-
 }
 
 .container{
     width:90%;
     max-width:1000px;
     margin:50px 0;
-    background: rgba(0,0,0,0.85);
-    color:#eee;
+    background: rgba(20,20,20,0.9);
+    color:#eaeaea;
     padding:30px;
     border-radius:20px;
     box-shadow: 0 0 25px rgba(0,0,0,0.8);
@@ -30,8 +29,8 @@ body{
 
 h1{
     font-size:3.5rem;
-    color:#ff4444;
-    text-shadow:0 0 25px crimson;
+    color:#e6b800;
+    text-shadow:0 0 25px rgba(230,184,0,0.5);
     font-family: 'Cinzel', serif;
     letter-spacing: 2px;
 }
@@ -39,21 +38,21 @@ h1{
 .game-title{
     font-size:2.6rem;
     margin-top:60px;
-    border-bottom:4px solid crimson;
+    border-bottom:4px solid #e6b800;
     padding-bottom:12px;
-    color:#ff7777;
+    color:#ffd86b;
     font-family: 'Uncial Antiqua', serif;
 }
 
 .section-title{
     font-size:2rem;
     margin-top:30px;
-    color:#ff9999;
+    color:#f5c84c;
 }
 
 .progress-container{
     width:90%;
-    background:#333;
+    background:#2a2a2a;
     border-radius:12px;
     margin:15px auto;
     position: relative;
@@ -64,7 +63,7 @@ h1{
 .progress-fill{
     height:100%;
     width:0%;
-    background:#00ff99;
+    background:linear-gradient(90deg,#00d084,#00ffcc);
     transition: width 1s ease-in-out;
 }
 
@@ -76,7 +75,7 @@ h1{
     left:0;
     font-weight:bold;
     line-height:30px;
-    color:#fff;
+    color:#ffffff;
 }
 
 .boss{
@@ -85,18 +84,19 @@ h1{
 }
 
 .done{
-    color:#00ff99;
+    color:#00ffcc;
 }
 
 .notdone{
-    color:#ff6666;
+    color:#ff6b6b;
 }
 
 .deaths{
     font-size:1.4rem;
     margin-top:10px;
-    color:#ffee33;
+    color:#ffd86b;
 }
+
 .boss-link{
     text-decoration: none;
     color: inherit;
@@ -104,10 +104,11 @@ h1{
 }
 
 .boss-link:hover{
-    color: #ff4444;
-    text-shadow: 0 0 8px crimson;
+    color: #e6b800;
+    text-shadow: 0 0 8px rgba(230,184,0,0.6);
     cursor: pointer;
 }
+
 .preview-img{
     position: absolute;
     width: 260px;
@@ -117,6 +118,7 @@ h1{
     display: none;
     z-index: 1000;
 }
+
 .preview-box{
     position:absolute;
     display:none;
@@ -132,8 +134,8 @@ h1{
 }
 
 .preview-deaths{
-    background:#111;
-    color:#fff;
+    background:#1a1a1a;
+    color:#ffd86b;
     padding:6px 10px;
     font-size:14px;
     text-align:center;
