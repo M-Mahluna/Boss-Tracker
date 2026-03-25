@@ -9,123 +9,114 @@
 
 body{
     margin:0;
-    font-family:'Inter',sans-serif;
-    color:#eaeaea;
-    background:linear-gradient(180deg,#0f0f0f,#141414,#0f0f0f);
+    background:white;
+    display:flex;
+    justify-content:center;
+    font-family: 'Cormorant Garamond', serif;
+
 }
 
-/* Titel */
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:50px 0;
+    background: rgba(0,0,0,0.85);
+    color:#eee;
+    padding:30px;
+    border-radius:20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+    text-align:center;
+}
 
 h1{
-    text-align:center;
-    font-family:'Cinzel',serif;
-    font-size:42px;
-    margin-top:35px;
-    color:#f5c84c;
-    letter-spacing:2px;
-    text-shadow:0 0 10px rgba(245,200,76,0.3);
+    font-size:3.5rem;
+    color:#ff4444;
+    text-shadow:0 0 25px crimson;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
 }
 
-/* Spiel */
+.game-title{
+    font-size:2.6rem;
+    margin-top:60px;
+    border-bottom:4px solid crimson;
+    padding-bottom:12px;
+    color:#ff7777;
+    font-family: 'Uncial Antiqua', serif;
+}
 
-.game{
+.section-title{
+    font-size:2rem;
+    margin-top:30px;
+    color:#ff9999;
+}
+
+.progress-container{
     width:90%;
-    max-width:1100px;
-    margin:auto;
-    margin-top:40px;
-}
-
-/* Gebiet */
-
-.section{
-    background:#1c1c1c;
-    padding:20px;
-    margin-bottom:25px;
-    border-radius:10px;
-    border:1px solid #2a2a2a;
-    box-shadow:0 5px 20px rgba(0,0,0,0.5);
-    transition:0.25s;
-}
-
-.section:hover{
-    box-shadow:0 5px 25px rgba(245,200,76,0.15);
-}
-
-/* Gebiet Titel */
-
-.section h2{
-    font-family:'Cinzel',serif;
-    color:#f5c84c;
-    margin-bottom:15px;
-}
-
-/* Fortschrittsbalken */
-
-.progress-bar{
-    width:100%;
-    height:12px;
-    background:#2a2a2a;
-    border-radius:10px;
+    background:#333;
+    border-radius:12px;
+    margin:15px auto;
+    position: relative;
+    height:30px;
     overflow:hidden;
-    margin-bottom:18px;
 }
 
-.progress{
+.progress-fill{
     height:100%;
-    background:linear-gradient(90deg,#f5c84c,#ffd86b);
-    transition:0.4s;
+    width:0%;
+    background:#00ff99;
+    transition: width 1s ease-in-out;
 }
 
-/* Boss */
+.progress-text{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:0;
+    left:0;
+    font-weight:bold;
+    line-height:30px;
+    color:#fff;
+}
 
 .boss{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 12px;
-    border-bottom:1px solid #2a2a2a;
-    transition:0.2s;
+    margin:6px 0;
+    font-size:1.2rem;
 }
 
-.boss:hover{
-    background:#242424;
-    border-radius:6px;
+.done{
+    color:#00ff99;
 }
 
-/* Boss Link */
+.notdone{
+    color:#ff6666;
+}
 
+.deaths{
+    font-size:1.4rem;
+    margin-top:10px;
+    color:#ffee33;
+}
 .boss-link{
-    text-decoration:none;
-    color:#eaeaea;
-    font-size:15px;
-    transition:0.2s;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
 }
 
 .boss-link:hover{
-    color:#ffd86b;
+    color: #ff4444;
+    text-shadow: 0 0 8px crimson;
+    cursor: pointer;
 }
-
-/* erledigt */
-
-.completed{
-    color:#6dffb3;
+.preview-img{
+    position: absolute;
+    width: 260px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    pointer-events: none;
+    display: none;
+    z-index: 1000;
 }
-
-/* nicht erledigt */
-
-.not-completed{
-    color:#ff6b6b;
-}
-
-/* Todesanzeige */
-
-.deaths{
-    color:#ff6b6b;
-    font-weight:500;
-}
-
-/* Hover Preview */
-
 .preview-box{
     position:absolute;
     display:none;
@@ -137,13 +128,17 @@ h1{
     width:260px;
     border-radius:10px;
     box-shadow:0 0 20px rgba(0,0,0,0.8);
+    display:block;
 }
 
 .preview-deaths{
     background:#111;
-    padding:6px;
+    color:#fff;
+    padding:6px 10px;
+    font-size:14px;
     text-align:center;
     border-radius:0 0 10px 10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.6);
 }
 </style>
 </head>
