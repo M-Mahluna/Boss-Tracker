@@ -178,7 +178,7 @@ const games = {
 
 bloodborne: {
     name: "Bloodborne",
-    deaths: 110,   // ← HIER TODE ÄNDERN
+    deaths: 111,   // ← HIER TODE ÄNDERN
     sections: [
         {
             name:"Hauptspiel",
@@ -486,7 +486,48 @@ eldenring: {
         }
   ]
 },
-
+    darksouls1: {
+      Name:"Dark Souls 1",
+      deaths:0,
+      sections: [
+       {
+         Name:"Hauptspiel",
+         bosses:[
+{name:"Asylum Demon", completed:false, deaths:0, clip:"", thumbnail:"BossNr1.png"},
+{name:"Taurus Demon", completed:false, deaths:0, clip:"", thumbnail:"BossNr2.png"},
+{name:"Bell Gargoyles", completed:false, deaths:0, clip:"", thumbnail:"BossNr3.png"},
+{name:"Capra Demon", completed:false, deaths:0, clip:"", thumbnail:"BossNr4.png"},
+{name:"Gaping Dragon", completed:false, deaths:0, clip:"", thumbnail:"BossNr5.png"},
+{name:"Chaos Witch Quelaag", completed:false, deaths:0, clip:"", thumbnail:"BossNr6.png"},
+{name:"Moonlight Butterfly", completed:false, deaths:0, clip:"", thumbnail:"BossNr7.png"},
+{name:"Iron Golem", completed:false, deaths:0, clip:"", thumbnail:"BossNr8.png"},
+{name:"Ornstein & Smough", completed:false, deaths:0, clip:"", thumbnail:"BossNr9.png"},
+{name:"Great Grey Wolf Sif", completed:false, deaths:0, clip:"", thumbnail:"BossNr10.png"},
+{name:"Stray Demon", completed:false, deaths:0, clip:"", thumbnail:"BossNr11.png"},
+{name:"Pinwheel", completed:false, deaths:0, clip:"", thumbnail:"BossNr12.png"},
+{name:"Gravelord Nito", completed:false, deaths:0, clip:"", thumbnail:"BossNr13.png"},
+{name:"Seath the Scaleless", completed:false, deaths:0, clip:"", thumbnail:"BossNr14.png"},
+{name:"Four Kings", completed:false, deaths:0, clip:"", thumbnail:"BossNr15.png"},
+{name:"Ceaseless Discharge", completed:false, deaths:0, clip:"", thumbnail:"BossNr16.png"},
+{name:"Demon Firesage", completed:false, deaths:0, clip:"", thumbnail:"BossNr17.png"},
+{name:"Centipede Demon", completed:false, deaths:0, clip:"", thumbnail:"BossNr18.png"},
+{name:"Bed of Chaos", completed:false, deaths:0, clip:"", thumbnail:"BossNr19.png"},
+{name:"Crossbreed Priscilla", completed:false, deaths:0, clip:"", thumbnail:"BossNr20.png"},
+{name:"Dark Sun Gwyndolin", completed:false, deaths:0, clip:"", thumbnail:"BossNr21.png"},
+{name:"Gwyn, Lord of Cinder", completed:false, deaths:0, clip:"", thumbnail:"BossNr22.png"}
+     ]
+},
+          {
+              name:"DLC Artorias of the Abyss",
+              bosses:[
+{name:"Sanctuary Guardian", completed:false, deaths:0, clip:"", thumbnail:"BossNr23.png"},
+{name:"Knight Artorias", completed:false, deaths:0, clip:"", thumbnail:"BossNr24.png"},
+{name:"Black Dragon Kalameet", completed:false, deaths:0, clip:"", thumbnail:"BossNr25.png"},
+{name:"Manus, Father of the Abyss", completed:false, deaths:0, clip:"", thumbnail:"BossNr26.png"}
+            ]
+          }
+       ]
+    },
 darksouls3: {
     name: "Dark Souls 3",
     deaths: 543,   // ← HIER TODE ÄNDERN
@@ -760,6 +801,7 @@ if(boss.completed && boss.clip){
 
 createGame("bloodborne");
 createGame("eldenring");
+createGame("darksouls1");
 createGame("darksouls3");
 
 </script>
