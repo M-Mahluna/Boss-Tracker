@@ -142,6 +142,26 @@ h1{
     border-radius:0 0 10px 10px;
     box-shadow:0 0 15px rgba(0,0,0,0.6);
 }
+    .game-header{
+    cursor:pointer;
+    transition:0.3s;
+    padding:10px;
+    border-radius:10px;
+}
+
+.game-header:hover{
+    background:rgba(255,255,255,0.05);
+}
+
+.game-content{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.6s ease;
+}
+
+.game-content.open{
+    max-height:20000px;
+}
 </style>
 </head>
 <body>
@@ -521,16 +541,32 @@ function createGame(gameKey){
     const container = document.createElement("div");
 
     // Spieltitel
-    const title = document.createElement("div");
-    title.className="game-title";
-    title.innerText=game.name;
-    container.appendChild(title);
+    const title = document.createElement("h2");
+title.className = "game-title game-header";
+title.innerText = "▶ " + game.name;
+
+const gameContent = document.createElement("div");
+gameContent.className = "game-content";
+
+title.onclick = () => {
+
+    gameContent.classList.toggle("open");
+
+    if(gameContent.classList.contains("open")){
+        title.innerText = "▼ " + game.name;
+    } else {
+        title.innerText = "▶ " + game.name;
+    }
+};
+
+container.appendChild(title);
+container.appendChild(gameContent);
 
     // Todesanzeige
     const deathDiv = document.createElement("div");
     deathDiv.className="deaths";
     deathDiv.innerText="Tode insgesamt: " + game.deaths;
-    container.appendChild(deathDiv);
+    gameContent.appendChild(deathDiv);
 
     // Funktion um Balken zu erstellen
     function createProgressBar(percent){
@@ -562,8 +598,8 @@ function createGame(gameKey){
     const totalTitle = document.createElement("div");
     totalTitle.className="section-title";
     totalTitle.innerText="Gesamtfortschritt";
-    container.appendChild(totalTitle);
-    container.appendChild(createProgressBar(totalPercent));
+    gameContent.appendChild(totalTitle);
+    gameContent.appendChild(createProgressBar(totalPercent));
 
     // Abschnitts-Fortschritt
     game.sections.forEach(section=>{
@@ -576,10 +612,10 @@ function createGame(gameKey){
         const sectionTitle=document.createElement("div");
         sectionTitle.className="section-title";
         sectionTitle.innerText=section.name;
-        container.appendChild(sectionTitle);
+        gameContent.appendChild(sectionTitle);
 
         // Abschnittsbalken
-        container.appendChild(createProgressBar(sectionPercent));
+        gameContent.appendChild(createProgressBar(sectionPercent));
 
         // Bossliste
       section.bosses
@@ -714,7 +750,7 @@ if(boss.completed && boss.clip){
             div.innerText = (boss.completed ? "✔ " : "✖ ") + boss.name;
         }
 
-        container.appendChild(div);
+        gameContent.appendChild(div);
     });
 
     });
