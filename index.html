@@ -178,7 +178,7 @@ const games = {
 
 bloodborne: {
     name: "Bloodborne",
-    deaths: 121,   // ← HIER TODE ÄNDERN
+    deaths: 123,   // ← HIER TODE ÄNDERN
     sections: [
         {
             name:"Hauptspiel",
@@ -208,7 +208,7 @@ bloodborne: {
                 {name:"Ludwig, The Holy Blade", completed:true, deaths:7, clip:"https://www.twitch.tv/mahluna/clip/PlainAmazingSwallowPicoMause-mgW0JrTCG_v08Q0C", thumbnail:"BossNr12.png"},
                 {name:"Laurence, the First Vicar", completed:false},
                 {name:"Living Failures", completed:true, deaths:0, clip:"https://www.twitch.tv/mahluna/clip/GleamingDeliciousRutabagaPhilosoraptor-QpDoCavEFoh5YPl-", thumbnail:"BossNr13.png"},
-                {name:"Lady Maria of the Astral Clocktower", completed:false},
+                {name:"Lady Maria of the Astral Clocktower", completed:false, deaths:2},
                 {name:"Orphan of Kos", completed:false}
             ]
         }
@@ -524,6 +524,74 @@ eldenring: {
           }
        ]
     },
+    darksouls2: {
+    name: "Dark Souls 2",
+    deaths: ?,   // ← HIER TODE ÄNDERN
+    sections: [
+        {
+            name:"Hauptspiel",
+            bosses:[
+{name:"The Last Giant", completed:true},
+{name:"The Pursuer", completed:true},
+{name:"Dragonrider", completed:true},
+{name:"Old Dragonslayer", completed:true},
+{name:"Flexile Sentry", completed:true},
+{name:"Ruin Sentinels", completed:true},
+{name:"Belfry Gargoyles", completed:true},
+{name:"Lost Sinner", completed:true},
+{name:"Executioner's Chariot", completed:true},
+{name:"Skeleton Lords", completed:true},
+{name:"Covetous Demon", completed:true},
+{name:"Mytha, the Baneful Queen", completed:true},
+{name:"Smelter Demon", completed:true},
+{name:"Old Iron King", completed:true},
+{name:"Scorpioness Najka", completed:true},
+{name:"Royal Rat Vanguard", completed:true},
+{name:"Royal Rat Authority", completed:true},
+{name:"The Duke's Dear Freja", completed:true},
+{name:"Prowling Magus and Congregation", completed:true},
+{name:"The Rotten", completed:true},
+{name:"Dragonrider (Twin)", completed:true},
+{name:"Looking Glass Knight", completed:true},
+{name:"Demon of Song", completed:true},
+{name:"Velstadt, the Royal Aegis", completed:true},
+{name:"Vendrick", completed:true},
+{name:"Guardian Dragon", completed:true},
+{name:"Ancient Dragon", completed:true},
+{name:"Giant Lord", completed:true},
+{name:"Throne Watcher and Throne Defender", completed:true},
+{name:"Nashandra", completed:true},
+{name:"Aldia, Scholar of the First Sin", completed:true},
+{name:"Darklurker", completed:true}
+          ]
+        },
+        {
+            name:"DLC Crown of the Sunken King"
+            bosses:[
+{name:"Elana, the Squalid Queen", completed:true},
+{name:"Sinh, the Slumbering Dragon", completed:true},
+{name:"Graverobber, Varg, and Cerah", completed:true}
+          ]
+        },
+        {
+            name:"DLC Crown of the Old Iron King"
+            bosses:[
+{name:"Fume Knight", completed:true},
+{name:"Sir Alonne", completed:true},
+{name:"Blue Smelter Demon", completed:true}
+          ]
+        },
+        {
+            name:"DLC Crown of the Ivory King"
+            bosses:[
+{name:"Aava, the King's Pet", completed:true},
+{name:"Burnt Ivory King", completed:true},
+{name:"Lud and Zallen, the King's Pets", completed:true}
+         ]
+        }
+    ]
+ },
+    
 darksouls3: {
     name: "Dark Souls 3",
     deaths: 543,   // ← HIER TODE ÄNDERN
@@ -798,6 +866,7 @@ if(boss.completed && boss.clip){
 createGame("bloodborne");
 createGame("eldenring");
 createGame("darksouls1");
+createGame("darksouls2");
 createGame("darksouls3");
 
 </script>
