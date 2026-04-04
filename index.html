@@ -448,6 +448,63 @@ eldenring: {
         }
   ]
 },
+    sekiro: {
+    name: "Sekiro",
+    deaths: 0,   // ← HIER GESAMTTODE ÄNDERN
+    sections: [
+        {
+            name:"Hauptbosse",
+            bosses:[
+                {name:"Gyoubu Masataka Oniwa", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Lady Butterfly", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Genichiro Ashina", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Folding Screen Monkeys", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Guardian Ape", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Headless Ape", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Corrupted Monk", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"True Corrupted Monk", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Great Shinobi Owl", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Owl (Father)", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Divine Dragon", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Demon of Hatred", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Emma, the Gentle Blade", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Isshin Ashina", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Isshin, the Sword Saint", completed:false, deaths:0, clip:"", thumbnail:""}
+            ]
+        },
+        {
+            name:"Minibosse",
+            bosses:[
+                {name:"General Naomori Kawarada", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Chained Ogre", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"General Tenzen Yamauchi", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Blazing Bull", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"General Kuranosuke Matsumoto", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Seven Ashina Spears - Shikibu Toshikatsu Yamauchi", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Shinobi Hunter Enshin of Misen", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Juzou the Drunkard", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Lone Shadow Masanaga", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Ashina Elite Jinsuke Saze", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Lone Shadow Longswordsman", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Seven Ashina Spears - Shume Masaji Oniwa", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Ashina Elite Ujinari Mizuo", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Armored Warrior", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Long-arm Centipede Sen'un", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Long-arm Centipede Giraffe", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Snake Eyes Shirahagi", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Snake Eyes Shirafuji", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Tokujiro the Glutton", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Mist Noble", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"O'Rin of the Water", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Okami Leader Shizu", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Shigekichi of the Red Guard", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Lone Shadow Vilehand", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Chained Ogre (Ashina Castle)", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Seven Ashina Spears - Endgame", completed:false, deaths:0, clip:"", thumbnail:""}
+            ]
+        }
+    ]
+},
     
     bloodborne: {
     name: "Bloodborne",
@@ -866,6 +923,7 @@ if(boss.completed && boss.clip){
 }
 
 createGame("eldenring");
+createGame("sekiro");
 createGame("bloodborne");
 createGame("darksouls1");
 createGame("darksouls2");
