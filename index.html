@@ -505,6 +505,43 @@ eldenring: {
         }
     ]
 },
+
+    liesofp: {
+    name: "Lies of P",
+    deaths: 0,   // ← HIER GESAMTTODE ÄNDERN
+    sections: [
+        {
+            name:"Hauptbosse",
+            bosses:[
+                {name:"Parade Master", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Scrapped Watchman", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"King's Flame, Fuoco", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Fallen Archbishop Andreus", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Eldest of the Black Rabbit Brotherhood", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"King of Puppets (Romeo)", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Champion Victor", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Green Monster of the Swamp", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Corrupted Parade Master", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Black Rabbit Brotherhood (Second Fight)", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Laxasia the Complete", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Simon Manus, Awakened God", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Nameless Puppet", completed:false, deaths:0, clip:"", thumbnail:""}
+            ]
+        },
+        {
+            name:"Optionale Bosse / Stalker",
+            bosses:[
+                {name:"Mad Donkey", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Survivor", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Owl Doctor", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"The Atoned", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"White Lady", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Walker of Illusions", completed:false, deaths:0, clip:"", thumbnail:""},
+                {name:"Door Guardian", completed:false, deaths:0, clip:"", thumbnail:""}
+            ]
+        }
+    ]
+},
     
     bloodborne: {
     name: "Bloodborne",
@@ -924,6 +961,7 @@ if(boss.completed && boss.clip){
 
 createGame("eldenring");
 createGame("sekiro");
+createGame("liesofp");
 createGame("bloodborne");
 createGame("darksouls1");
 createGame("darksouls2");
