@@ -993,15 +993,21 @@ const searchInput = document.getElementById("search");
 
 searchInput.addEventListener("input", function(){
 
-    const value = searchInput.value.toLowerCase();
+    const searchValue = searchInput.value.toLowerCase();
+
     const bosses = document.querySelectorAll(".boss");
+    const games = document.querySelectorAll(".game-content");
 
     bosses.forEach(boss => {
 
         const text = boss.innerText.toLowerCase();
 
-        if(text.includes(value)){
+        if(text.includes(searchValue)){
             boss.style.display = "block";
+
+            const gameContent = boss.closest(".game-content");
+            gameContent.style.maxHeight = gameContent.scrollHeight + "px";
+
         } else {
             boss.style.display = "none";
         }
