@@ -34,7 +34,36 @@ h1{
     font-family: 'Cinzel', serif;
     letter-spacing: 2px;
 }
+<h1>Mahluna – Boss Tracker</h1>
 
+<input 
+    type="text" 
+    id="search" 
+    placeholder="Boss suchen..." 
+    class="search-box"
+/>
+
+<div id="games"></div>
+.search-box{
+    width:80%;
+    max-width:500px;
+    padding:12px;
+    margin:20px auto 40px auto;
+    border-radius:12px;
+    border:none;
+    font-size:1.1rem;
+    background:#1a1a1a;
+    color:#fff;
+    outline:none;
+    box-shadow:0 0 15px rgba(0,0,0,0.6);
+    transition:0.3s;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.search-box:focus{
+    box-shadow:0 0 20px rgba(230,184,0,0.7);
+    background:#111;
+}
 .game-title{
     font-size:2.6rem;
     margin-top:60px;
@@ -958,6 +987,34 @@ if(boss.completed && boss.clip){
 
     document.getElementById("content").appendChild(container);
 }
+const searchInput = document.getElementById("search");
+
+searchInput.addEventListener("input", function(){
+
+    const searchValue = searchInput.value.toLowerCase();
+
+    const bosses = document.querySelectorAll(".boss");
+
+    bosses.forEach(boss => {
+
+        const text = boss.innerText.toLowerCase();
+
+        if(text.includes(searchValue)){
+            boss.style.display = "block";
+
+            const gameContent = boss.closest(".game-content");
+
+            if(gameContent){
+                gameContent.style.maxHeight = gameContent.scrollHeight + "px";
+            }
+
+        } else {
+            boss.style.display = "none";
+        }
+
+    });
+
+});
 
 createGame("eldenring");
 createGame("sekiro");
