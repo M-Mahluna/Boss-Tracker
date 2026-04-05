@@ -992,24 +992,37 @@ createGame("darksouls3");
 const searchInput = document.getElementById("search");
 const contentContainer = document.getElementById("content");
 
-// Einen Container für Suchtreffer erstellen
+// Container für Suchtreffer erstellen
 let searchResults = document.createElement("div");
 searchResults.id = "search-results";
-searchResults.style.marginBottom = "30px"; // etwas Abstand
-contentContainer.prepend(searchResults);  // oben einfügen
+searchResults.style.marginBottom = "30px";
+searchResults.innerHTML = "<h3>Suchtreffer:</h3>"; // optionaler Titel
+contentContainer.prepend(searchResults);
+
+// Tooltip für Hover-Preview
+let tooltip = document.createElement("div");
+tooltip.id = "tooltip";
+tooltip.style.position = "absolute";
+tooltip.style.background = "rgba(0,0,0,0.8)";
+tooltip.style.color = "#fff";
+tooltip.style.padding = "10px";
+tooltip.style.borderRadius = "8px";
+tooltip.style.display = "none";
+tooltip.style.pointerEvents = "none";
+tooltip.style.zIndex = 9999;
+document.body.appendChild(tooltip);
 
 searchInput.addEventListener("input", function(e) {
     const searchTerm = e.target.value.toLowerCase();
 
-    // Zuerst alte Treffer löschen
-    searchResults.innerHTML = "";
+    // Alte Treffer entfernen
+    searchResults.innerHTML = "<h3>Suchtreffer:</h3>";
 
     if (searchTerm === "") {
-        // leer → keine Treffer anzeigen
-        return;
+        return; // nichts anzeigen
     }
 
-    // Alle Boss-Elemente durchgehen
+    // Alle Bosse durchgehen
     const bosses = document.querySelectorAll(".boss");
     bosses.forEach(boss => {
         const bossName = boss.textContent.toLowerCase();
@@ -1017,9 +1030,35 @@ searchInput.addEventListener("input", function(e) {
             // Boss klonen
             const clone = boss.cloneNode(true);
             clone.style.display = "block";
-            clone.style.background = "rgba(230,184,0,0.1)"; // optische Hervorhebung
+            clone.style.background = "rgba(230,184,0,0.1)";
             clone.style.padding = "4px 10px";
             clone.style.borderRadius = "8px";
+            clone.style.marginBottom = "4px";
+
+            // Game/Quelle anzeigen
+            const gameLabel = document.createElement("span");
+            gameLabel.textContent = ` (${boss.dataset.game})`;
+            gameLabel.style.fontSize = "0.9em";
+            gameLabel.style.color = "#555";
+            clone.appendChild(gameLabel);
+
+            // Hover-Funktion
+            clone.addEventListener("mouseenter", function(ev) {
+                tooltip.innerHTML = `
+                  <strong>${boss.textContent}</strong><br>
+                  <img src="${boss.dataset.image}" width="150"><br>
+                  Tode: ${boss.dataset.deaths}
+                `;
+                tooltip.style.display = "block";
+            });
+            clone.addEventListener("mousemove", function(ev) {
+                tooltip.style.top = ev.pageY + 15 + "px";
+                tooltip.style.left = ev.pageX + 15 + "px";
+            });
+            clone.addEventListener("mouseleave", function() {
+                tooltip.style.display = "none";
+            });
+
             searchResults.appendChild(clone);
         }
     });
