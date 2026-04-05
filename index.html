@@ -34,6 +34,11 @@ h1{
     font-family: 'Cinzel', serif;
     letter-spacing: 2px;
 }
+ <h1>Souls Boss Tracker</h1>
+
+<input type="text" id="search" placeholder="Boss suchen..." class="search-box">
+
+<div id="games"></div>   
 .search-box{
     width:80%;
     max-width:500px;
@@ -755,7 +760,35 @@ darksouls3: {
 }
 
 };
+    
+const searchInput = document.getElementById("search");
 
+searchInput.addEventListener("input", function(){
+
+    const searchValue = searchInput.value.toLowerCase();
+
+    const bosses = document.querySelectorAll(".boss");
+
+    bosses.forEach(boss => {
+
+        const text = boss.innerText.toLowerCase();
+
+        if(text.includes(searchValue)){
+            boss.style.display = "block";
+
+            const gameContent = boss.closest(".game-content");
+
+            if(gameContent){
+                gameContent.style.maxHeight = gameContent.scrollHeight + "px";
+            }
+
+        } else {
+            boss.style.display = "none";
+        }
+
+    });
+
+});
 function createGame(gameKey){
     const game = games[gameKey];
     const container = document.createElement("div");
@@ -977,34 +1010,6 @@ if(boss.completed && boss.clip){
 
     document.getElementById("content").appendChild(container);
 }
-const searchInput = document.getElementById("search");
-
-searchInput.addEventListener("input", function(){
-
-    const searchValue = searchInput.value.toLowerCase();
-
-    const bosses = document.querySelectorAll(".boss");
-
-    bosses.forEach(boss => {
-
-        const text = boss.innerText.toLowerCase();
-
-        if(text.includes(searchValue)){
-            boss.style.display = "block";
-
-            const gameContent = boss.closest(".game-content");
-
-            if(gameContent){
-                gameContent.style.maxHeight = gameContent.scrollHeight + "px";
-            }
-
-        } else {
-            boss.style.display = "none";
-        }
-
-    });
-
-});
 
 createGame("eldenring");
 createGame("sekiro");
