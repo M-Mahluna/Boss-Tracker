@@ -196,7 +196,7 @@ h1{
 <script>
 
 
-const games = {
+const allGames = {
 
 
 eldenring: {
@@ -981,13 +981,13 @@ if(boss.completed && boss.clip){
     document.getElementById("content").appendChild(container);
 }
 
-const allGames = [
-  bloodborne, 
-  darksouls1, 
-  darksouls2, 
-  darksouls3, 
-  liesofp
-];
+createGame("eldenring");
+createGame("sekiro");
+createGame("liesofp");
+createGame("bloodborne");
+createGame("darksouls1");
+createGame("darksouls2");
+createGame("darksouls3");
 
  let tooltip = document.createElement("div");
   tooltip.id = "tooltip";
