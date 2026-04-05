@@ -186,8 +186,11 @@ h1{
 <body>
 
 <div class="container">
-<h1>Mahluna's Boss Progress</h1>
-<div id="content"></div>
+  <h1>Mahluna's Boss Progress</h1>
+
+  <input type="text" id="search" class="search-box" placeholder="Boss suchen...">
+
+  <div id="content"></div>
 </div>
 
 <script>
@@ -986,6 +989,27 @@ createGame("darksouls1");
 createGame("darksouls2");
 createGame("darksouls3");
 
+const searchInput = document.getElementById("search");
+
+searchInput.addEventListener("input", function(){
+
+    const value = searchInput.value.toLowerCase();
+    const bosses = document.querySelectorAll(".boss");
+
+    bosses.forEach(boss => {
+
+        const text = boss.innerText.toLowerCase();
+
+        if(text.includes(value)){
+            boss.style.display = "block";
+        } else {
+            boss.style.display = "none";
+        }
+
+    });
+
+});
+    
 </script>
 
 </body>
