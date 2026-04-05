@@ -992,32 +992,39 @@ createGame("darksouls3");
 document.getElementById("search").addEventListener("input", function(e) {
     const searchTerm = e.target.value.toLowerCase();
 
-    // Alle Spiele/Sections durchgehen
-    const gameContents = document.querySelectorAll(".game-content");
-    gameContents.forEach(content => {
-        let hasVisibleBoss = false;
-
+    // Alle Sections durchgehen
+    const sections = document.querySelectorAll(".game-content");
+    sections.forEach(section => {
         // Alle Boss-Elemente innerhalb der Section
-        const bosses = content.querySelectorAll(".boss");
+        const bosses = section.querySelectorAll(".boss");
+        let sectionHasMatch = false;
+
         bosses.forEach(boss => {
             const bossName = boss.textContent.toLowerCase();
-            if (bossName.includes(searchTerm)) {
-                boss.style.display = "block";
-                hasVisibleBoss = true;
+            if (bossName.includes(searchTerm) && searchTerm !== "") {
+                boss.style.display = "block"; // Treffer sichtbar
+                sectionHasMatch = true;
             } else {
-                boss.style.display = "none";
+                boss.style.display = "none"; // alles andere verstecken
             }
         });
 
-        // Sections ausklappen, wenn Suchbegriff gefunden
-        if (searchTerm && hasVisibleBoss) {
-            content.classList.add("open");
-        } else if (!searchTerm) {
-            // Alles wieder normal
-            content.classList.remove("open");
-            bosses.forEach(boss => boss.style.display = "block");
+        // Section selbst einblenden nur wenn Treffer drin
+        if (sectionHasMatch) {
+            section.style.display = "block";
+        } else {
+            section.style.display = "none";
         }
     });
+
+    // Wenn Suchfeld leer, alles zurücksetzen
+    if (searchTerm === "") {
+        sections.forEach(section => {
+            section.style.display = "block"; // Sections sichtbar
+            const bosses = section.querySelectorAll(".boss");
+            bosses.forEach(boss => boss.style.display = "block"); // alle Bosse sichtbar
+        });
+    }
 });
     
 </script>
