@@ -996,37 +996,35 @@ const contentContainer = document.getElementById("content");
 let searchResults = document.createElement("div");
 searchResults.id = "search-results";
 searchResults.style.marginBottom = "30px";
+
+// Überschrift "Suchergebnisse:" dauerhaft anzeigen
+let header = document.createElement("h3");
+header.textContent = "Suchergebnisse:";
+searchResults.appendChild(header);
+
 contentContainer.prepend(searchResults);
 
 searchInput.addEventListener("input", function(e) {
     const searchTerm = e.target.value.toLowerCase();
 
-    // alte Treffer löschen
-    searchResults.innerHTML = "";
+    // Alte Treffer (alles außer Überschrift) löschen
+    searchResults.querySelectorAll(".search-boss").forEach(el => el.remove());
 
     if (searchTerm === "") {
-        return; // leer → keine Treffer
+        return; // Eingabe leer → keine Treffer anzeigen
     }
-
-    // Überschrift nur anzeigen, wenn Treffer vorhanden
-    let headerAdded = false;
 
     const bosses = document.querySelectorAll(".boss");
     bosses.forEach(boss => {
         const bossName = boss.textContent.toLowerCase();
         if (bossName.includes(searchTerm)) {
-            if (!headerAdded) {
-                let header = document.createElement("h3");
-                header.textContent = "Suchergebnisse:";
-                searchResults.appendChild(header);
-                headerAdded = true;
-            }
 
-            // Spielname über dem Boss
+            // Game-Label über dem Boss
             let gameLabel = document.createElement("div");
-            gameLabel.textContent = boss.dataset.game; // "Bloodborne" z. B.
+            gameLabel.textContent = boss.dataset.game; 
             gameLabel.style.fontWeight = "bold";
-            gameLabel.style.marginBottom = "4px";
+            gameLabel.style.marginTop = "10px";
+            gameLabel.classList.add("search-boss"); // damit wir es später löschen können
             searchResults.appendChild(gameLabel);
 
             // Boss klonen
@@ -1036,6 +1034,7 @@ searchInput.addEventListener("input", function(e) {
             clone.style.padding = "4px 10px";
             clone.style.borderRadius = "8px";
             clone.style.marginBottom = "10px";
+            clone.classList.add("search-boss"); // damit wir es später löschen können
 
             searchResults.appendChild(clone);
         }
