@@ -989,31 +989,35 @@ createGame("darksouls1");
 createGame("darksouls2");
 createGame("darksouls3");
 
-const searchInput = document.getElementById("search");
+document.getElementById("search").addEventListener("input", function(e) {
+    const searchTerm = e.target.value.toLowerCase();
 
-searchInput.addEventListener("input", function(){
+    // Alle Spiele/Sections durchgehen
+    const gameContents = document.querySelectorAll(".game-content");
+    gameContents.forEach(content => {
+        let hasVisibleBoss = false;
 
-    const searchValue = searchInput.value.toLowerCase();
+        // Alle Boss-Elemente innerhalb der Section
+        const bosses = content.querySelectorAll(".boss");
+        bosses.forEach(boss => {
+            const bossName = boss.textContent.toLowerCase();
+            if (bossName.includes(searchTerm)) {
+                boss.style.display = "block";
+                hasVisibleBoss = true;
+            } else {
+                boss.style.display = "none";
+            }
+        });
 
-    const bosses = document.querySelectorAll(".boss");
-    const games = document.querySelectorAll(".game-content");
-
-    bosses.forEach(boss => {
-
-        const text = boss.innerText.toLowerCase();
-
-        if(text.includes(searchValue)){
-            boss.style.display = "block";
-
-            const gameContent = boss.closest(".game-content");
-            gameContent.style.maxHeight = gameContent.scrollHeight + "px";
-
-        } else {
-            boss.style.display = "none";
+        // Sections ausklappen, wenn Suchbegriff gefunden
+        if (searchTerm && hasVisibleBoss) {
+            content.classList.add("open");
+        } else if (!searchTerm) {
+            // Alles wieder normal
+            content.classList.remove("open");
+            bosses.forEach(boss => boss.style.display = "block");
         }
-
     });
-
 });
     
 </script>
