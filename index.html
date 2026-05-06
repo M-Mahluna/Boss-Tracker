@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Mahluna – Boss Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #e6b800;
+  --gold-dim: #a07c00;
+  --gold-bright: #ffd86b;
+  --blood: #8b0000;
+  --ash: #c0b090;
+  --dark: #080808;
+  --dark2: #111010;
+  --panel: rgba(12,10,8,0.92);
+}
+
+*{ box-sizing: border-box; margin:0; padding:0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════
+   BACKGROUND LAYERS
+═══════════════════════════════════════ */
+
+#bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Deep background gradient */
+#bg-scene::before {
+  content:'';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(60,30,0,0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(100,10,10,0.2) 0%, transparent 60%),
+    linear-gradient(170deg, #0a0806 0%, #0d0b08 40%, #08060a 100%);
+}
+
+/* Elden Ring style fog/rune layers */
+.bg-rune {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(230,184,0,0.04);
+  animation: runeRotate linear infinite;
+}
+.bg-rune:nth-child(1){ width:900px; height:900px; top:50%; left:50%; transform:translate(-50%,-50%); animation-duration:80s; }
+.bg-rune:nth-child(2){ width:650px; height:650px; top:50%; left:50%; transform:translate(-50%,-50%); border-color:rgba(230,184,0,0.06); animation-duration:55s; animation-direction:reverse; }
+.bg-rune:nth-child(3){ width:400px; height:400px; top:50%; left:50%; transform:translate(-50%,-50%); border-color:rgba(230,184,0,0.08); animation-duration:35s; }
+
+@keyframes runeRotate {
+  from { transform: translate(-50%,-50%) rotate(0deg); }
+  to   { transform: translate(-50%,-50%) rotate(360deg); }
+}
+
+/* Particle embers */
+.ember {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  animation: emberFloat linear infinite;
+}
+
+@keyframes emberFloat {
+  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-20px) translateX(var(--drift)); opacity: 0; }
+}
+
+/* 3D perspective background image (Elden Ring style art using CSS shapes) */
+#bg-world {
+  position: absolute;
+  inset: 0;
+  perspective: 600px;
+}
+
+.bg-mountain {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  opacity: 0.06;
+  filter: blur(1px);
+  transform-origin: bottom center;
+  transform: rotateX(8deg);
+}
+
+.bg-mountain:nth-child(1){
+  left: 5%;
+  border-width: 0 180px 320px 180px;
+  border-color: transparent transparent #e6b800 transparent;
+}
+.bg-mountain:nth-child(2){
+  left: 20%;
+  border-width: 0 260px 480px 260px;
+  border-color: transparent transparent #c8a000 transparent;
+  opacity: 0.05;
+}
+.bg-mountain:nth-child(3){
+  right: 10%;
+  border-width: 0 200px 380px 200px;
+  border-color: transparent transparent #e6b800 transparent;
+}
+.bg-mountain:nth-child(4){
+  right: 28%;
+  border-width: 0 300px 550px 300px;
+  border-color: transparent transparent #b09000 transparent;
+  opacity: 0.04;
+}
+
+/* Erdtree-inspired golden light beam */
+.bg-beam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(230,184,0,0.12) 0%, transparent 100%);
+  filter: blur(8px);
+  animation: beamPulse 4s ease-in-out infinite;
+}
+.bg-beam::after {
+  content:'';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 300px;
+  background: radial-gradient(ellipse 40px 150px at center top, rgba(230,184,0,0.08) 0%, transparent 70%);
+  filter: blur(15px);
+}
+
+@keyframes beamPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Grain overlay */
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+
+#page-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 0 40px;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 60px 0 80px;
+  padding: 40px 36px;
+  background: var(--panel);
+  border-radius: 4px;
+  border: 1px solid rgba(230,184,0,0.12);
+  box-shadow:
+    0 0 80px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(230,184,0,0.04) inset;
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+
+
+/* ═══════════════════════════════════════
+   HERO TITLE
+═══════════════════════════════════════ */
+
+.hero-title-wrap {
+  position: relative;
+  margin-bottom: 8px;
+  padding-bottom: 24px;
+}
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.hero-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900;
+  color: var(--gold-bright);
+  line-height: 1;
+  text-shadow:
+    0 0 40px rgba(230,184,0,0.5),
+    0 0 80px rgba(230,184,0,0.2);
+  letter-spacing: 0.02em;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 40px rgba(230,184,0,0.5), 0 0 80px rgba(230,184,0,0.2); }
+  50%       { text-shadow: 0 0 60px rgba(230,184,0,0.8), 0 0 120px rgba(230,184,0,0.35); }
+}
+
+.hero-subtitle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-progress-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(230,184,0,0.06);
+  border: 1px solid rgba(230,184,0,0.18);
+  border-radius: 100px;
+  padding: 5px 16px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: var(--gold-bright);
+  letter-spacing: 0.1em;
+}
+
+.hero-progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%,100% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.5); opacity:0.5; }
+}
+
+.hero-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-bright) 50%, var(--gold) 70%, transparent);
+  margin-top: 20px;
+  opacity: 0.35;
+  position: relative;
+}
+
+.hero-divider::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: var(--gold);
+  font-size: 0.9rem;
+  background: var(--panel);
+  padding: 0 10px;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════ */
+
+.search-wrap {
+  position: relative;
+  width: 80%;
+  max-width: 460px;
+  margin: 28px auto 44px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-dim);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.search-box {
+  width: 100%;
+  padding: 13px 18px 13px 42px;
+  border-radius: 3px;
+  border: 1px solid rgba(230,184,0,0.18);
+  font-size: 1rem;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  outline: none;
+  font-family: 'Cormorant Garamond', serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-box::placeholder { color: rgba(200,175,100,0.35); }
+
+.search-box:focus {
+  border-color: rgba(230,184,0,0.5);
+  box-shadow: 0 0 20px rgba(230,184,0,0.12);
+}
+
+/* ═══════════════════════════════════════
+   GAME SECTION
+═══════════════════════════════════════ */
+
+.game-block { margin-bottom: 4px; }
+
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  border: 1px solid rgba(230,184,0,0.08);
+  border-radius: 3px;
+  background: rgba(230,184,0,0.02);
+  transition: background 0.3s, border-color 0.3s;
+  user-select: none;
+}
+
+.game-header:hover {
+  background: rgba(230,184,0,0.06);
+  border-color: rgba(230,184,0,0.2);
+}
+
+.game-header-arrow {
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+  transition: transform 0.4s;
+  flex-shrink: 0;
+}
+
+.game-header.open .game-header-arrow { transform: rotate(90deg); }
+
+.game-header-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+  flex: 1;
+  text-align: left;
+}
+
+.game-header-stat {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+  text-align: right;
+  line-height: 1.5;
+}
+
+.game-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.7s cubic-bezier(0.4,0,0.2,1);
+  border: 1px solid transparent;
+  border-top: none;
+}
+
+.game-content.open {
+  max-height: 40000px;
+  border-color: rgba(230,184,0,0.06);
+  border-radius: 0 0 3px 3px;
+}
+
+.game-content-inner {
+  padding: 20px 20px 28px;
+}
+
+/* ═══════════════════════════════════════
+   DEATHS DISPLAY
+═══════════════════════════════════════ */
+
+.deaths-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139,0,0,0.12);
+  border: 1px solid rgba(139,0,0,0.3);
+  border-radius: 100px;
+  padding: 6px 18px;
+  margin-bottom: 22px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  color: #ff8080;
+  letter-spacing: 0.12em;
+}
+
+/* ═══════════════════════════════════════
+   PROGRESS BARS
+═══════════════════════════════════════ */
+
+.prog-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  margin-top: 22px;
+}
+
+.prog-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.prog-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, #1A4C39, #00cc88);
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+  position: relative;
+}
+
+.prog-fill::after {
+  content:'';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 20px;
+  background: rgba(255,255,255,0.3);
+  filter: blur(4px);
+  border-radius: 100px;
+}
+
+.prog-pct {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  color: rgba(0,204,136,0.7);
+  text-align: right;
+  margin-bottom: 18px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══════════════════════════════════════
+   SECTION TITLE
+═══════════════════════════════════════ */
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 28px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(230,184,0,0.15);
+  text-align: left;
+  position: relative;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   BOSS ROWS
+═══════════════════════════════════════ */
+
+.boss-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  transition: background 0.2s;
+}
+
+.boss-row:hover { background: rgba(255,255,255,0.03); }
+
+.boss-status {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  width: 16px;
+}
+
+.boss-status.done   { color: #00cc88; }
+.boss-status.undone { color: #ff6b6b; }
+
+.boss-name {
+  flex: 1;
+  font-size: 1.05rem;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.boss-name.done-text   { color: rgba(200,240,220,0.85); }
+.boss-name.undone-text { color: rgba(200,180,180,0.6); }
+
+.boss-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* YouTube / Twitch icon links */
+.clip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.2s, opacity 0.2s;
+  opacity: 0.75;
+}
+
+.clip-btn:hover { transform: scale(1.15); opacity: 1; }
+
+.clip-btn.yt-btn {
+  background: rgba(255,0,0,0.15);
+  border: 1px solid rgba(255,0,0,0.3);
+  color: #ff4444;
+}
+
+.clip-btn.tw-btn {
+  background: rgba(145,70,255,0.15);
+  border: 1px solid rgba(145,70,255,0.3);
+  color: #9146ff;
+}
+
+.clip-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+/* death badge next to boss */
+.boss-deaths-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  color: #ff8080;
+  background: rgba(139,0,0,0.15);
+  border: 1px solid rgba(139,0,0,0.25);
+  border-radius: 100px;
+  padding: 2px 8px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════
+   SEARCH RESULTS
+═══════════════════════════════════════ */
+
+#search-results {
+  margin-bottom: 36px;
+}
+
+.search-result-header {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(230,184,0,0.1);
+  text-align: left;
+}
+
+.search-result-group {
+  margin-bottom: 12px;
+}
+
+.search-result-game {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  text-align: left;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE: hide sidebars on small
+═══════════════════════════════════════ */
+
+
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<div id="bg-scene">
+  <div class="bg-rune"></div>
+  <div class="bg-rune"></div>
+  <div class="bg-rune"></div>
+  <div class="bg-beam"></div>
+  <div id="bg-world">
+    <div class="bg-mountain"></div>
+    <div class="bg-mountain"></div>
+    <div class="bg-mountain"></div>
+    <div class="bg-mountain"></div>
+  </div>
+</div>
+
+<!-- Grain -->
+<div id="grain"></div>
+
+<div id="page-wrapper">
+<div class="container">
+
+  <!-- HERO TITLE -->
+  <div class="hero-title-wrap">
+    <div class="hero-eyebrow">The Chronicles of</div>
+    <div class="hero-name">Mahluna</div>
+    <div class="hero-subtitle-row">
+      <span class="hero-progress-pill">
+        <span class="hero-progress-dot"></span>
+        <span id="hero-global-stat">Boss Progress Tracker</span>
+      </span>
+    </div>
+    <div class="hero-divider"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <span class="search-icon">⚔</span>
+    <input type="text" id="search" class="search-box" placeholder="Boss suchen...">
+  </div>
+
+  <!-- SEARCH RESULTS (injected here) -->
+  <div id="search-results"></div>
+
+  <!-- GAME CONTENT -->
+  <div id="content"></div>
+
+</div>
+</div>
+
+<script>
+// ─── SVG ICONS ───────────────────────────────────────────
+const YT_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+const TW_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>`;
+
+// ─── GAMES DATA ──────────────────────────────────────────
+const games = {
+  eldenring: {
+    name:"Elden Ring",
+    deaths: 0,
+    sections: [
+      { name:"Limgrave", bosses:[
+        {name:"Assasine der Schwarzen Klinge",completed:false},{name:"Avatar des Erdenbaums",completed:false},{name:"Baumgeist mit Geschwüren",completed:false},{name:"Baumwächter",completed:false},{name:"Bestienmensch von Farum Azula",completed:false},{name:"Bluthundritter Darriwil",completed:false},{name:"Dunkelkavallerist Limgrave",completed:false},{name:"Dunkelkavallerist Halbinsel der Tränen",completed:false},{name:"Fliegender Drache Agheel",completed:false},{name:"Friedhofsschemen",completed:false},{name:"Godrick der Verpflanzte",completed:false},{name:"Grabhüterduellant",completed:false},{name:"Halbmenschen-Herrscher",completed:false},{name:"Klangperlenjäger",completed:false},{name:"Löwenartiges Scheusal",completed:false},{name:"Löwenwächter",completed:false},{name:"Margit, das Grausame Mal",completed:false},{name:"Miranda die faulige Blume",completed:false},{name:"Patches",completed:false},{name:"Runenbär",completed:false},{name:"Schuppenscheusal",completed:false},{name:"Schmelztiegelritter",completed:false},{name:"Soldat Godricks",completed:false},{name:"Steingräbertroll",completed:false},{name:"Tibiaseefahrer",completed:false},{name:"Todesvogel (Limgrave)",completed:false},{name:"Todesvogel (Halbinsel der Tränen)",completed:false},{name:"Uralter Held von Zamor",completed:false},{name:"Verpflanzter Spross",completed:false},{name:"Wachhund des Erdenbaumbegräbnisses (Katakomben des Pfählers)",completed:false},{name:"Wachhund des Erdenbaumbegräbnisses (Sturmfuß-Katakomben)",completed:false},{name:"Wächtergolem",completed:false},{name:"Wahnsinniger Kürbiskopf",completed:false}
+      ]},
+      { name:"Liurnia", bosses:[
+        {name:"Adan, Dieb des Feuers",completed:false},{name:"Adliger der Götterskalpe",completed:false},{name:"Alecto, Oberhaupt der Schwarzen Klingen",completed:false},{name:"Assasine der Schwarzen Klinge",completed:false},{name:"Avatar des Erdenbaums (Liurnia Nordosten)",completed:false},{name:"Avatar des Erdenbaums (Liurnia Südwesten)",completed:false},{name:"Bluthundritter",completed:false},{name:"Bols, Carianischer Ritter",completed:false},{name:"Dunkelkavallerist Süden",completed:false},{name:"Dunkelkavallerist Norden",completed:false},{name:"Friedhofsschemen",completed:false},{name:"Geisterruferschnecke",completed:false},{name:"Glimmersteindrache Adula",completed:false},{name:"Glimmersteindrache Smarag",completed:false},{name:"Klangperlenjäger",completed:false},{name:"Königliche Ritterin Loretta",completed:false},{name:"Königliches Gespenst",completed:false},{name:"Kristalliner mit Ringklinge",completed:false},{name:"Kristalliner mit Speer & Kristalliner mit Stab",completed:false},{name:"Magmawurm Makar",completed:false},{name:"Maltöter",completed:false},{name:"Reinfäule-Ritter",completed:false},{name:"Rennala, Königin des Vollmonds",completed:false},{name:"Roter Wolf von Radagon",completed:false},{name:"Tibiaseefahrer",completed:false},{name:"Todesritenvogel",completed:false},{name:"Todesvogel",completed:false},{name:"Wachhund des Erdenbaumbegräbnisses",completed:false}
+      ]},
+      { name:"Caelid", bosses:[
+        {name:"Apostel der Götterskalpe",completed:false},{name:"Avatar des Erdenbaums",completed:false},{name:"Bestienmensch von Farum Azula",completed:false},{name:"Dunkelkavallerist Nordost",completed:false},{name:"Dunkelkavallerist Süden",completed:false},{name:"Elderdrache Greyoll",completed:false},{name:"Faulige Kristallianer",completed:false},{name:"Fauliger Baumgeist",completed:false},{name:"Fliegender Drache Greyll",completed:false},{name:"Friedhofsschemen",completed:false},{name:"Klangperlenjäger",completed:false},{name:"Kommandant O'Neil",completed:false},{name:"Kriegsmagier Hugues",completed:false},{name:"Magmawurm",completed:false},{name:"Nox Schwertmaid & Nox Mönch",completed:false},{name:"Rasender Duellant",completed:false},{name:"Reinfäule-Ritter",completed:false},{name:"Schmelztiegelritter & Löwenartiges Scheusal",completed:false},{name:"Sternenfallbestie",completed:false},{name:"Sternengeißel Radahn",completed:false},{name:"Stinkender Avatar",completed:false},{name:"Todesritenvogel",completed:false},{name:"Verehrer der schwarzen Klinge",completed:false},{name:"Verfallender Ekzykes",completed:false},{name:"Wachhund des Erdenbaumbegräbnisses",completed:false},{name:"Wahnsinnige Kürbisköpfe",completed:false}
+      ]},
+      { name:"Altus Plateau", bosses:[
+        {name:"Apostel der Götterskalpe",completed:false},{name:"Assassine der Schwarzen Klinge (Sage's Cave)",completed:false},{name:"Assassine der Schwarzen Klinge (Sainted Hero's Grave)",completed:false},{name:"Baumwächter Duo",completed:false},{name:"Blutadliger",completed:false},{name:"Drachenbaumwächter",completed:false},{name:"Elemer von den Dornen",completed:false},{name:"Godefroy der Verpflanzte",completed:false},{name:"Grabhüterduellant",completed:false},{name:"Halbmenschliche Königin Gilika",completed:false},{name:"Kristalliner mit Speer & Kristalliner mit Ringklinge",completed:false},{name:"Nekromant Garris",completed:false},{name:"Steingräbertroll",completed:false},{name:"Sternenfallbestie",completed:false},{name:"Tibiaseefahrer",completed:false},{name:"Uralter Held von Zamor",completed:false},{name:"Wurmgesicht",completed:false}
+      ]},
+      { name:"Berg Gelmir", bosses:[
+        {name:"Adliger der Götterskalpe",completed:false},{name:"Ancient Dragon Lansseax",completed:false},{name:"Ausgewachsene Sternenfallbestie",completed:false},{name:"Baumgeist mit Geschwüren",completed:false},{name:"Entführer-Jungfrauen",completed:false},{name:"Götterverschlingende Schlange / Rykard, Fürst der Blasphemie",completed:false},{name:"Halbmenschliche Königin Maggie",completed:false},{name:"Halbmenschliche Königin Margot",completed:false},{name:"Kindred of Rot",completed:false},{name:"Magmawurm",completed:false},{name:"Parfümeurin Tricia & Löwenartiges Scheusal",completed:false},{name:"Heldenhafter Roter Wolf",completed:false},{name:"Wachhund des Erdenbaumbegräbnisses",completed:false}
+      ]},
+      { name:"Leyndell, Royale Hauptstadt", bosses:[
+        {name:"Esgar, Priester des Blutes",completed:false},{name:"Godfrey, Erster Eldenfürst",completed:false},{name:"Golem der Götterbrücke",completed:false},{name:"Grausame Zwillinge",completed:false},{name:"Klangperlenjäger",completed:false},{name:"Mohg, das Omen",completed:false},{name:"Morgott, König des Mals",completed:false},{name:"Onyxfürst",completed:false},{name:"Schmelztiegelritter & Schmelztiegelritter Ordovis",completed:false}
+      ]},
+      { name:"Berggipfel der Riesen", bosses:[
+        {name:"Apostel der Götterskalpe & Adliger der Götterskalpe",completed:false},{name:"Avatar des Erdenbaums",completed:false},{name:"Baumgeist mit Geschwüren",completed:false},{name:"Borealis der eisige Nebel",completed:false},{name:"Feuerriese",completed:false},{name:"Great Wyrm Theodorix",completed:false},{name:"Kommandant Niall",completed:false},{name:"Misbegotten Crusader",completed:false},{name:"Tibiaseefahrer",completed:false},{name:"Todesritenvogel (Central)",completed:false},{name:"Todesritenvogel (West)",completed:false},{name:"Uralter Held von Zamor",completed:false},{name:"Vyke, Ritter der Tafelrundfeste",completed:false}
+      ]},
+      { name:"Siofra", bosses:[
+        {name:"Ahnengeist",completed:false},{name:"Drachenblutsoldat",completed:false},{name:"Mohg, Fürst des Blutes",completed:false}
+      ]},
+      { name:"Ainsel", bosses:[{name:"Drachenblutsoldat von Nokstella",completed:false}]},
+      { name:"Zerfallendes Farum Azula", bosses:[
+        {name:"Bestienkleriker / Maliketh, die Schwarze Klinge",completed:false},{name:"Drachenlord Placidusax",completed:false},{name:"Duo der Götterskalpe",completed:false}
+      ]},
+      { name:"Verbotene Lande", bosses:[{name:"Dunkelkavallerist",completed:false},{name:"Schwarze Klinge Kindred",completed:false}]},
+      { name:"Nokron, Ewige Stadt", bosses:[
+        {name:"Imitatorträne",completed:false},{name:"Königlicher Ahnengeist",completed:false},{name:"Tapferer Gargoyle & Tapferer Gargoyle (Zwillingsklinge)",completed:false}
+      ]},
+      { name:"Tiefenwurzel-Tiefen", bosses:[
+        {name:"Fia's Champions",completed:false},{name:"Lichdrache Fortissax",completed:false},{name:"Schmelztiegelritter Siluria",completed:false}
+      ]},
+      { name:"Fäulnissee", bosses:[{name:"Astel, Ausgeburt des Abgrunds",completed:false},{name:"Drachenblutsoldat",completed:false}]},
+      { name:"Geweihtes Schneefeld", bosses:[
+        {name:"Aste, Sterne der Finsternis",completed:false},{name:"Loretta, Ritterin des Haligbaums",completed:false},{name:"Malenia, Klinge von Miquella",completed:false},{name:"Misbegotten Crusader",completed:false},{name:"Dunkelkavallerist (Duo)",completed:false},{name:"Stinkender Avatar",completed:false},{name:"Putrid Grave Warden Duelist",completed:false},{name:"Todesritenvogel",completed:false}
+      ]},
+      { name:"Leyndell, Aschene Hauptstadt", bosses:[
+        {name:"Godfrey, Erster Eldenfürst (Hoarah Loux)",completed:false},{name:"Sir Gideon Ofnir, der Allwissende",completed:false}
+      ]},
+      { name:"Eldenthron", bosses:[{name:"Radagon von der Goldenen Ordnung / Eldenbestie",completed:false}]},
+      { name:"DLC", bosses:[{name:"?",completed:false},{name:"?",completed:false},{name:"?",completed:false},{name:"?",completed:false},{name:"?",completed:false}]}
+    ]
+  },
+
+  sekiro: {
+    name:"Sekiro", deaths:0,
+    sections:[
+      { name:"Hauptbosse", bosses:[
+        {name:"Gyoubu Masataka Oniwa",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Lady Butterfly",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Genichiro Ashina",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Folding Screen Monkeys",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Guardian Ape",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Headless Ape",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Corrupted Monk",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"True Corrupted Monk",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Great Shinobi Owl",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Owl (Father)",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Divine Dragon",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Demon of Hatred",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Emma, the Gentle Blade",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Isshin Ashina",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Isshin, the Sword Saint",completed:false,deaths:0,clip:"",thumbnail:""}
+      ]},
+      { name:"Minibosse", bosses:[
+        {name:"General Naomori Kawarada",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Chained Ogre",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"General Tenzen Yamauchi",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Blazing Bull",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"General Kuranosuke Matsumoto",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Seven Ashina Spears - Shikibu",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Shinobi Hunter Enshin",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Juzou the Drunkard",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Lone Shadow Masanaga",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Ashina Elite Jinsuke Saze",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Lone Shadow Longswordsman",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Seven Ashina Spears - Shume",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Ashina Elite Ujinari",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Armored Warrior",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Long-arm Centipede Sen'un",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Long-arm Centipede Giraffe",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Snake Eyes Shirahagi",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Snake Eyes Shirafuji",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Tokujiro the Glutton",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Mist Noble",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"O'Rin of the Water",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Okami Leader Shizu",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Shigekichi of the Red Guard",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Lone Shadow Vilehand",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Chained Ogre (Ashina Castle)",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Seven Ashina Spears - Endgame",completed:false,deaths:0,clip:"",thumbnail:""}
+      ]}
+    ]
+  },
+
+  liesofp: {
+    name:"Lies of P", deaths:0,
+    sections:[
+      { name:"Hauptbosse", bosses:[
+        {name:"Parade Master",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Scrapped Watchman",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"King's Flame, Fuoco",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Fallen Archbishop Andreus",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Eldest of the Black Rabbit Brotherhood",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"King of Puppets (Romeo)",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Champion Victor",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Green Monster of the Swamp",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Corrupted Parade Master",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Black Rabbit Brotherhood (Second Fight)",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Laxasia the Complete",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Simon Manus, Awakened God",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Nameless Puppet",completed:false,deaths:0,clip:"",thumbnail:""}
+      ]},
+      { name:"Optionale Bosse / Stalker", bosses:[
+        {name:"Mad Donkey",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Survivor",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Owl Doctor",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"The Atoned",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"White Lady",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Walker of Illusions",completed:false,deaths:0,clip:"",thumbnail:""},
+        {name:"Door Guardian",completed:false,deaths:0,clip:"",thumbnail:""}
+      ]}
+    ]
+  },
+
+  bloodborne: {
+    name:"Bloodborne", deaths:193,
+    sections:[
+      { name:"Hauptspiel", bosses:[
+        {name:"Cleric Beast",completed:true,deaths:1,clip:"https://youtu.be/ai58t1mshoI?si=_rk6RDPLIxGhclcf&t=12621",thumbnail:"BossNr1.png"},
+        {name:"Father Gascoigne",completed:true,deaths:1,clip:"https://youtu.be/ai58t1mshoI?si=D63v-Hd5MZ7hLll7&t=13550",thumbnail:"BossNr2.png"},
+        {name:"Blood-starved Beast",completed:true,deaths:8,clip:"https://youtu.be/ai58t1mshoI?si=U8r88_7CfQVnyxJw&t=29748",thumbnail:"BossNr3.png"},
+        {name:"Vicar Amelia",completed:true,deaths:7,clip:"https://youtu.be/UneiV9_wrCM?si=tabA8RXSEu3l_Oqq&t=7672",thumbnail:"BossNr4.png"},
+        {name:"Witch of Hemwick",completed:true,deaths:0,clip:"https://youtu.be/UneiV9_wrCM?si=NeU4cg48iJRR8l7f&t=11131",thumbnail:"BossNr5.png"},
+        {name:"Darkbeast Paarl",completed:true,deaths:0,clip:"https://youtu.be/UneiV9_wrCM?si=yELGrgTP-1ASift-&t=17939",thumbnail:"BossNr6.png"},
+        {name:"Shadow of Yharnam",completed:true,deaths:1,clip:"https://youtu.be/UneiV9_wrCM?si=EuAb7JRcZGfNg0eo&t=26093",thumbnail:"BossNr7.png"},
+        {name:"Rom, the Vacuous Spider",completed:true,deaths:2,clip:"https://youtu.be/UneiV9_wrCM?si=iH4_JlCISjA3kh_k&t=30669",thumbnail:"BossNr8.png"},
+        {name:"The One Reborn",completed:true,deaths:0,clip:"https://youtu.be/ILmiW7Q8_VI?si=wqhP9WOFWZQgRBOt&t=3346",thumbnail:"BossNr9.png"},
+        {name:"Micolash, Host of the Nightmare",completed:true,deaths:4,clip:"https://youtu.be/ExFGOCH1rK8?si=w4pwZUro8cNDWVhK&t=6161",thumbnail:"BossNr10.png"},
+        {name:"Celestial Emissary",completed:true,deaths:0,clip:"https://youtu.be/6aSr5Kv0eOM?si=oz6cnky4WPWpgucn&t=6707",thumbnail:"BossNr17.png"},
+        {name:"Ebrietas, Daughter of the Cosmos",completed:true,deaths:3,clip:"https://youtu.be/6aSr5Kv0eOM?si=l9j07jbdyR_qNkHy&t=7900",thumbnail:"BossNr18.png"},
+        {name:"Martyr Logarius",completed:true,deaths:1,clip:"https://youtu.be/6aSr5Kv0eOM?si=Pe03-prnJZb4Bj67&t=3818",thumbnail:"BossNr16.png"},
+        {name:"Amygdala",completed:true,deaths:0,clip:"https://youtu.be/6aSr5Kv0eOM?si=IKBUuco72tzCRmpi&t=10240",thumbnail:"BossNr19.png"},
+        {name:"Mergo's Wet Nurse",completed:true,deaths:0,clip:"https://youtu.be/T7gs-CwzKCs?si=9N5-OIoeQmELhjmn&t=2088",thumbnail:"BossNr11.png"},
+        {name:"Gehrman, the First Hunter",completed:true,deaths:0,clip:"https://youtu.be/9x3xRrB_iFg?si=tI4CeuvItbakmZ6H&t=3324",thumbnail:"BossNr21.png"}
+      ]},
+      { name:"DLC The Old Hunters", bosses:[
+        {name:"Ludwig, The Holy Blade",completed:true,deaths:7,clip:"https://youtu.be/T7gs-CwzKCs?si=JDDOHdN4KgsN0-BK&t=10856",thumbnail:"BossNr12.png"},
+        {name:"Laurence, the First Vicar",completed:true,deaths:16,clip:"https://youtu.be/9x3xRrB_iFg?si=ia-72Gj4K6irRLBS&t=2587",thumbnail:"BossNr20.png"},
+        {name:"Living Failures",completed:true,deaths:0,clip:"https://youtu.be/T7gs-CwzKCs?si=wvqNYRDDGv8bZMWI&t=15511",thumbnail:"BossNr13.png"},
+        {name:"Lady Maria of the Astral Clocktower",completed:true,deaths:8,clip:"https://youtu.be/T7gs-CwzKCs?si=THRLe1i58IDnIJFX&t=20294",thumbnail:"BossNr14.png"},
+        {name:"Orphan of Kos",completed:true,deaths:28,clip:"https://youtu.be/MaujOfRmMIA?si=dD3-HnqSk0FtPOYA&t=7290",thumbnail:"BossNr15.png"}
+      ]}
+    ]
+  },
+
+  darksouls1: {
+    name:"Dark Souls 1", deaths:22,
+    sections:[
+      { name:"Hauptspiel", bosses:[
+        {name:"Asylum Demon",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=0lRe2qUtQdeOX-h7&t=385",thumbnail:""},
+        {name:"Taurus Demon",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=Fd0S2TW9TYSApoIC&t=2049",thumbnail:""},
+        {name:"Bell Gargoyles",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=AFIXlZu6510uaUMt&t=5465",thumbnail:""},
+        {name:"Gaping Dragon",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=jKz5UFbIPmuE4peH&t=12424",thumbnail:""},
+        {name:"Chaos Witch Quelaag",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=zgChMT4HDB47pxDL&t=15010",thumbnail:""},
+        {name:"Moonlight Butterfly",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=hpUgzPD40tm0aBLO&t=5057",thumbnail:""},
+        {name:"Iron Golem",completed:true,deaths:0,clip:"https://youtu.be/Aj1OwzvPZ5s?si=yyrg768lWM63SJVd&t=3028",thumbnail:""},
+        {name:"Ornstein & Smough",completed:true,deaths:0,clip:"https://youtu.be/Aj1OwzvPZ5s?si=Ebv_tdbN_8RHeY07&t=12292",thumbnail:""},
+        {name:"Great Grey Wolf Sif",completed:true,deaths:0,clip:"https://youtu.be/Aj1OwzvPZ5s?si=isOzgc7rfAkyNmsc&t=958",thumbnail:""},
+        {name:"Stray Demon",completed:true,deaths:2,clip:"https://youtu.be/q1pxFjOxJUI?si=au2F6WCg745zf1JX&t=23347",thumbnail:""},
+        {name:"Gravelord Nito",completed:true,deaths:1,clip:"https://youtu.be/wcrNwDU3Tzs?si=ajCie5FKXBU8JcT1&t=18462",thumbnail:""},
+        {name:"Seath the Scaleless",completed:true,deaths:1,clip:"https://youtu.be/wcrNwDU3Tzs?si=vv8VOLzzrU0o0vlw&t=5148",thumbnail:""},
+        {name:"Four Kings",completed:true,deaths:0,clip:"https://youtu.be/Aj1OwzvPZ5s?si=u0cxkZTGwF-9GdEY&t=5783",thumbnail:""},
+        {name:"Ceaseless Discharge",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=tFCqbsgqaCH-d3hf&t=15584",thumbnail:""},
+        {name:"Demon Firesage",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=WYz34ntxB3edt30c&t=10305",thumbnail:""},
+        {name:"Crossbreed Priscilla",completed:true,deaths:0,clip:"https://youtu.be/Aj1OwzvPZ5s?si=XxtOd3D3v69GqJ1p&t=16705",thumbnail:""},
+        {name:"Dark Sun Gwyndolin",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=GFAvamRxsZF0loh_&t=1617",thumbnail:""},
+        {name:"Gwyn, Lord of Cinder",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=HivJ21pFoVqIplmd&t=24759",thumbnail:""}
+      ]},
+      { name:"DLC Artorias of the Abyss", bosses:[
+        {name:"Sanctuary Guardian",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=hjBUYulP9jniBlbV&t=5705",thumbnail:""},
+        {name:"Knight Artorias",completed:true,deaths:3,clip:"https://youtu.be/wcrNwDU3Tzs?si=3ZkgqZCSnUI3m1GU&t=8260",thumbnail:""},
+        {name:"Black Dragon Kalameet",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=Sr_DdpxOc8qC-T2a&t=21804",thumbnail:""},
+        {name:"Manus, Father of the Abyss",completed:true,deaths:0,clip:"https://youtu.be/wcrNwDU3Tzs?si=sKxKIJqxSuVZ0i_W&t=20722",thumbnail:""}
+      ]}
+    ]
+  },
+
+  darksouls2: {
+    name:"Dark Souls 2", deaths:0,
+    sections:[
+      { name:"Hauptspiel", bosses:[
+        {name:"The Last Giant",completed:true},{name:"The Pursuer",completed:true},{name:"Dragonrider",completed:true},{name:"Old Dragonslayer",completed:true},{name:"Flexile Sentry",completed:true},{name:"Ruin Sentinels",completed:true},{name:"Belfry Gargoyles",completed:true},{name:"Lost Sinner",completed:true},{name:"Executioner's Chariot",completed:true},{name:"Skeleton Lords",completed:true},{name:"Covetous Demon",completed:true},{name:"Mytha, the Baneful Queen",completed:true},{name:"Smelter Demon",completed:true},{name:"Old Iron King",completed:true},{name:"Scorpioness Najka",completed:true},{name:"Royal Rat Vanguard",completed:true},{name:"Royal Rat Authority",completed:true},{name:"The Duke's Dear Freja",completed:true},{name:"Prowling Magus and Congregation",completed:true},{name:"The Rotten",completed:true},{name:"Dragonrider (Twin)",completed:true},{name:"Looking Glass Knight",completed:true},{name:"Demon of Song",completed:true},{name:"Velstadt, the Royal Aegis",completed:true},{name:"Vendrick",completed:true},{name:"Guardian Dragon",completed:true},{name:"Ancient Dragon",completed:true},{name:"Giant Lord",completed:true},{name:"Throne Watcher and Defender",completed:true},{name:"Nashandra",completed:true},{name:"Aldia, Scholar of the First Sin",completed:true},{name:"Darklurker",completed:true}
+      ]},
+      { name:"DLC Crown of the Sunken King", bosses:[
+        {name:"Elana, the Squalid Queen",completed:true},{name:"Sinh, the Slumbering Dragon",completed:true},{name:"Graverobber, Varg, and Cerah",completed:true}
+      ]},
+      { name:"DLC Crown of the Old Iron King", bosses:[
+        {name:"Fume Knight",completed:true},{name:"Sir Alonne",completed:true},{name:"Blue Smelter Demon",completed:true}
+      ]},
+      { name:"DLC Crown of the Ivory King", bosses:[
+        {name:"Aava, the King's Pet",completed:true},{name:"Burnt Ivory King",completed:true},{name:"Lud and Zallen, the King's Pets",completed:true}
+      ]}
+    ]
+  },
+
+  darksouls3: {
+    name:"Dark Souls 3", deaths:543,
+    sections:[
+      { name:"Hauptspiel", bosses:[
+        {name:"Iudex Gundyr",completed:true,deaths:6,clip:"https://youtu.be/2X4JCocPKLo?si=WTB5oQ8DQqUCUUH6&t=2180"},
+        {name:"Vordt of the Boreal Valley",completed:true,deaths:4,clip:"https://youtu.be/2X4JCocPKLo?si=_4KdQuzuMSpsBZsp&t=13294"},
+        {name:"Curse-Rotted Greatwood",completed:true,deaths:1,clip:"https://youtu.be/2X4JCocPKLo?si=d7UaYVb9L2R8dDhh&t=16261"},
+        {name:"Crystal Sage",completed:true,deaths:2,clip:"https://youtu.be/2X4JCocPKLo?si=YPmJK5vWWtAmOiGx&t=21121"},
+        {name:"Abyss Watchers",completed:true,deaths:4,clip:"https://youtu.be/2X4JCocPKLo?si=NZd40VtQU3kwYfFg&t=40843"},
+        {name:"Deacons of the Deep",completed:true,deaths:1,clip:"https://youtu.be/2X4JCocPKLo?si=Bapg_t_x9gh8_N9g&t=32000"},
+        {name:"High Lord Wolnir",completed:true,deaths:2,clip:"https://youtu.be/jSuqW82Fzh8?si=5EK3FpEaz6rw9zpl&t=4578"},
+        {name:"Old Demon King",completed:true,deaths:1,clip:""},
+        {name:"Pontiff Sulyvahn",completed:true,deaths:19,clip:"https://youtu.be/jSuqW82Fzh8?si=yh37UdSBzZtgzIQb&t=14403"},
+        {name:"Yhorm the Giant",completed:true,deaths:3,clip:"https://youtu.be/jSuqW82Fzh8?si=U_xzyB7j7enxpjY1&t=32365"},
+        {name:"Aldrich, Devourer of Gods",completed:true,deaths:28,clip:"https://youtu.be/jSuqW82Fzh8?si=q0I_DWkW6R1jBN8X&t=23720"},
+        {name:"Dancer of the Boreal Valley",completed:true,deaths:5,clip:"https://youtu.be/jSuqW82Fzh8?si=1X89QNDGGBf2GIcI&t=34133"},
+        {name:"Dragonslayer Armour",completed:true,deaths:7,clip:"https://youtu.be/Ud7r6LLTFKo?si=lRbL-oHgb7whJRtP&t=1424"},
+        {name:"Oceiros, the Consumed King",completed:true,deaths:1,clip:""},
+        {name:"Champion Gundyr",completed:true,deaths:1,clip:"https://youtu.be/UoBpFwu1rPA?si=WH5C7XxeP3afpH9f&t=13989"},
+        {name:"Lothric, Younger Prince",completed:true,deaths:55,clip:"https://youtu.be/Ud7r6LLTFKo?si=YgmgwMsfViP3CHbE&t=23161"},
+        {name:"Ancient Wyvern",completed:true,deaths:1,clip:"https://youtu.be/UoBpFwu1rPA?si=gqrl-OxLVFF1oQzN&t=22755"},
+        {name:"Nameless King",completed:true,deaths:10,clip:""},
+        {name:"Soul of Cinder",completed:true,deaths:121,clip:"https://youtu.be/UoBpFwu1rPA?si=WjjpYtoGULPFK3fo&t=10434"}
+      ]},
+      { name:"DLC Painted World of Ariandel", bosses:[
+        {name:"Champion's Gravetender & Gravetender Greatwolf",completed:true,deaths:1,clip:""},
+        {name:"Sister Friede",completed:true,deaths:1,clip:""}
+      ]},
+      { name:"DLC The Ringed City", bosses:[
+        {name:"Demon in Pain & Demon Prince",completed:true,deaths:1,clip:""},
+        {name:"Halflight, Spear of the Church",completed:true,deaths:1,clip:""},
+        {name:"Darkeater Midir",completed:true,deaths:1,clip:""},
+        {name:"Slave Knight Gael",completed:true,deaths:1,clip:""}
+      ]}
+    ]
+  }
+};
+
+// ─── HELPERS ─────────────────────────────────────────────
+
+function getYouTubeID(url) {
+  try {
+    const u = new URL(url);
+    if(u.hostname.includes("youtube.com")) return u.searchParams.get("v");
+    if(u.hostname.includes("youtu.be")) return u.pathname.split("/")[1].split("?")[0];
+  } catch(e) {}
+  return null;
+}
+
+function isYouTube(url) { return url && (url.includes("youtube") || url.includes("youtu.be")); }
+function isTwitch(url)  { return url && url.includes("twitch.tv"); }
+
+function makeBossRow(boss, gameName) {
+  const row = document.createElement("div");
+  row.className = "boss-row";
+  row.dataset.bossName = boss.name.toLowerCase();
+  row.dataset.game = gameName;
+
+  // Status icon
+  const status = document.createElement("span");
+  status.className = "boss-status " + (boss.completed ? "done" : "undone");
+  status.textContent = boss.completed ? "✔" : "✖";
+  row.appendChild(status);
+
+  // Boss name
+  const nameEl = document.createElement("span");
+  nameEl.className = "boss-name " + (boss.completed ? "done-text" : "undone-text");
+  nameEl.textContent = boss.name;
+  row.appendChild(nameEl);
+
+  // Actions area
+  const actions = document.createElement("div");
+  actions.className = "boss-actions";
+
+  // Deaths badge (only if deaths field exists and boss completed)
+  if(boss.completed && typeof boss.deaths === "number") {
+    const badge = document.createElement("span");
+    badge.className = "boss-deaths-badge";
+    badge.textContent = "☠ " + boss.deaths;
+    actions.appendChild(badge);
+  }
+
+  // Clip button
+  if(boss.clip) {
+    const btn = document.createElement("a");
+    btn.href = boss.clip;
+    btn.target = "_blank";
+    btn.rel = "noopener noreferrer";
+
+    if(isYouTube(boss.clip)) {
+      btn.className = "clip-btn yt-btn";
+      btn.innerHTML = YT_SVG;
+      btn.title = "YouTube Clip";
+    } else if(isTwitch(boss.clip)) {
+      btn.className = "clip-btn tw-btn";
+      btn.innerHTML = TW_SVG;
+      btn.title = "Twitch Clip";
+    } else {
+      btn.className = "clip-btn yt-btn";
+      btn.innerHTML = YT_SVG;
+      btn.title = "VOD ansehen";
+    }
+    actions.appendChild(btn);
+  }
+
+  if(actions.children.length > 0) row.appendChild(actions);
+
+  return row;
+}
+
+// ─── GLOBAL STATS ────────────────────────────────────────
+
+function computeGlobalStats() {
+  let total = 0, done = 0;
+  Object.values(games).forEach(g => {
+    g.sections.forEach(s => {
+      s.bosses.forEach(b => { total++; if(b.completed) done++; });
+    });
+  });
+  return { total, done, pct: Math.round((done/total)*100) };
+}
+
+// ─── BUILD PROGRESS BARS ─────────────────────────────────
+
+function buildProgressBar(pct) {
+  const wrap = document.createElement("div");
+  wrap.className = "prog-bar";
+  const fill = document.createElement("div");
+  fill.className = "prog-fill";
+  fill.style.width = "0%";
+  setTimeout(() => fill.style.width = pct + "%", 100);
+  wrap.appendChild(fill);
+  return wrap;
+}
+
+// ─── BUILD GAME BLOCK ────────────────────────────────────
+
+function createGame(gameKey) {
+  const game = games[gameKey];
+
+  let totalDone = 0, totalCount = 0;
+  game.sections.forEach(s => {
+    totalDone  += s.bosses.filter(b=>b.completed).length;
+    totalCount += s.bosses.length;
+  });
+  const totalPct = Math.round((totalDone / totalCount) * 100);
+
+  // Wrapper
+  const block = document.createElement("div");
+  block.className = "game-block";
+
+  // Header
+  const header = document.createElement("div");
+  header.className = "game-header";
+
+  const arrow = document.createElement("span");
+  arrow.className = "game-header-arrow";
+  arrow.textContent = "▶";
+
+  const hName = document.createElement("span");
+  hName.className = "game-header-name";
+  hName.textContent = game.name;
+
+  const hStat = document.createElement("span");
+  hStat.className = "game-header-stat";
+  hStat.innerHTML = `${totalDone}/${totalCount} Bosse<br>${totalPct}%`;
+
+  header.appendChild(arrow);
+  header.appendChild(hName);
+  header.appendChild(hStat);
+  block.appendChild(header);
+
+  // Content
+  const content = document.createElement("div");
+  content.className = "game-content";
+  const inner = document.createElement("div");
+  inner.className = "game-content-inner";
+  content.appendChild(inner);
+  block.appendChild(content);
+
+  // Deaths
+  const deathEl = document.createElement("div");
+  deathEl.className = "deaths-display";
+  deathEl.innerHTML = `☠ Tode insgesamt: <strong style="margin-left:6px">${game.deaths}</strong>`;
+  inner.appendChild(deathEl);
+
+  // Global progress
+  const gLabel = document.createElement("div");
+  gLabel.className = "prog-label";
+  gLabel.textContent = "Gesamtfortschritt";
+  inner.appendChild(gLabel);
+  inner.appendChild(buildProgressBar(totalPct));
+  const gPct = document.createElement("div");
+  gPct.className = "prog-pct";
+  gPct.textContent = totalPct + "%";
+  inner.appendChild(gPct);
+
+  // Sections
+  game.sections.forEach(section => {
+    const secDone  = section.bosses.filter(b=>b.completed).length;
+    const secTotal = section.bosses.length;
+    const secPct   = Math.round((secDone/secTotal)*100);
+
+    const stitle = document.createElement("div");
+    stitle.className = "section-title";
+    stitle.textContent = section.name;
+    inner.appendChild(stitle);
+
+    const sBar = buildProgressBar(secPct);
+    inner.appendChild(sBar);
+    const sPct = document.createElement("div");
+    sPct.className = "prog-pct";
+    sPct.textContent = `${secDone}/${secTotal} · ${secPct}%`;
+    inner.appendChild(sPct);
+
+    // Boss list sorted: done first
+    const sorted = [...section.bosses].sort((a,b) => b.completed - a.completed);
+    sorted.forEach(boss => {
+      inner.appendChild(makeBossRow(boss, game.name));
+    });
+  });
+
+  // Toggle
+  let openGame = null;
+  header.addEventListener("click", () => {
+    const isOpen = content.classList.contains("open");
+
+    // Close any previously open
+    document.querySelectorAll(".game-content.open").forEach(el => {
+      el.classList.remove("open");
+      el.previousElementSibling.classList.remove("open");
+      el.previousElementSibling.querySelector(".game-header-arrow").textContent = "▶";
+    });
+
+    if(!isOpen) {
+      content.classList.add("open");
+      header.classList.add("open");
+      arrow.textContent = "▼";
+    } else {
+    }
+  });
+
+  document.getElementById("content").appendChild(block);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+
+const gameOrder = ["eldenring","sekiro","liesofp","bloodborne","darksouls1","darksouls2","darksouls3"];
+gameOrder.forEach(k => createGame(k));
+
+// Global stat
+const gs = computeGlobalStats();
+document.getElementById("hero-global-stat").textContent = `${gs.done} / ${gs.total} Bosse besiegt · ${gs.pct}%`;
+
+// ─── EMBERS ──────────────────────────────────────────────
+
+const bgScene = document.getElementById("bg-scene");
+for(let i = 0; i < 25; i++) {
+  const e = document.createElement("div");
+  e.className = "ember";
+  e.style.left = Math.random()*100 + "vw";
+  e.style.animationDelay = Math.random()*18 + "s";
+  e.style.animationDuration = (12 + Math.random()*16) + "s";
+  e.style.setProperty("--drift", (Math.random()*80 - 40) + "px");
+  e.style.width = e.style.height = (1 + Math.random()*2) + "px";
+  e.style.opacity = Math.random()*0.6;
+  bgScene.appendChild(e);
+}
+
+// ─── SEARCH ──────────────────────────────────────────────
+
+const searchInput = document.getElementById("search");
+const resultsDiv  = document.getElementById("search-results");
+
+searchInput.addEventListener("input", function() {
+  const term = this.value.trim().toLowerCase();
+  resultsDiv.innerHTML = "";
+  if(!term) return;
+
+  // collect matches grouped by game
+  const matches = []; // [{gameName, boss}]
+  gameOrder.forEach(key => {
+    const game = games[key];
+    game.sections.forEach(s => {
+      s.bosses.forEach(b => {
+        if(b.name.toLowerCase().includes(term)) {
+          matches.push({ gameName: game.name, boss: b });
+        }
+      });
+    });
+  });
+
+  if(matches.length === 0) return;
+
+  const hdr = document.createElement("div");
+  hdr.className = "search-result-header";
+  hdr.textContent = `${matches.length} Treffer für „${this.value}"`;
+  resultsDiv.appendChild(hdr);
+
+  matches.forEach(m => {
+    const group = document.createElement("div");
+    group.className = "search-result-group";
+
+    const gameLabel = document.createElement("div");
+    gameLabel.className = "search-result-game";
+    gameLabel.textContent = m.gameName;
+    group.appendChild(gameLabel);
+
+    group.appendChild(makeBossRow(m.boss, m.gameName));
+    resultsDiv.appendChild(group);
+  });
+});
+
+// ─── PARALLAX BG ─────────────────────────────────────────
+
+document.addEventListener("mousemove", e => {
+  const mx = (e.clientX / window.innerWidth - 0.5) * 2;
+  const my = (e.clientY / window.innerHeight - 0.5) * 2;
+  document.querySelectorAll(".bg-rune").forEach((r, i) => {
+    const depth = (i + 1) * 8;
+    r.style.marginLeft = mx * depth + "px";
+    r.style.marginTop  = my * depth + "px";
+  });
+  document.querySelector(".bg-beam").style.left = (50 + mx * 3) + "%";
+});
+
+</script>
+</body>
+</html>
