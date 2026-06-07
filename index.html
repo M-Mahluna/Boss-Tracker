@@ -1024,6 +1024,73 @@ hollowknight: {
   ]
 },
   
+  silksong: {
+  name: "Hollow Knight: Silksong",
+  deaths: 0,
+  sections: [
+    {
+      name: "Act 1",
+      bosses: [
+        {name:"Bell Beast", completed:false, deaths:0, clip:""},
+        {name:"Fourth Chorus", completed:false, deaths:0, clip:""},
+        {name:"Great Conchflies", completed:false, deaths:0, clip:""},
+        {name:"Lace (Deep Docks)", completed:false, deaths:0, clip:""},
+        {name:"Last Judge", completed:false, deaths:0, clip:""},
+        {name:"Moorwing", completed:false, deaths:0, clip:""},
+        {name:"Moss Mother (Ruined Chapel)", completed:false, deaths:0, clip:""},
+        {name:"Moss Mother (Weavenest Atla)", completed:false, deaths:0, clip:""},
+        {name:"Phantom", completed:false, deaths:0, clip:""},
+        {name:"Savage Beastfly (Chapel of the Beast)", completed:false, deaths:0, clip:""},
+        {name:"Sister Splinter", completed:false, deaths:0, clip:""},
+        {name:"Skull Tyrant", completed:false, deaths:0, clip:""},
+        {name:"Widow", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Act 2",
+      bosses: [
+        {name:"Broodmother", completed:false, deaths:0, clip:""},
+        {name:"Cogwork Dancers", completed:false, deaths:0, clip:""},
+        {name:"Disgraced Chef Lugoli", completed:false, deaths:0, clip:""},
+        {name:"Father of the Flame", completed:false, deaths:0, clip:""},
+        {name:"First Sinner", completed:false, deaths:0, clip:""},
+        {name:"Forebrothers Signis & Gron", completed:false, deaths:0, clip:""},
+        {name:"Garmond and Zaza", completed:false, deaths:0, clip:""},
+        {name:"Grand Mother Silk", completed:false, deaths:0, clip:""},
+        {name:"Groal the Great", completed:false, deaths:0, clip:""},
+        {name:"Lace (The Cradle)", completed:false, deaths:0, clip:""},
+        {name:"Raging Conchfly", completed:false, deaths:0, clip:""},
+        {name:"Savage Beastfly (Far Fields)", completed:false, deaths:0, clip:""},
+        {name:"Second Sentinel", completed:false, deaths:0, clip:""},
+        {name:"Shakra", completed:false, deaths:0, clip:""},
+        {name:"The Unravelled", completed:false, deaths:0, clip:""},
+        {name:"Trobbio", completed:false, deaths:0, clip:""},
+        {name:"Voltvyrm", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Act 3",
+      bosses: [
+        {name:"Bell Eater", completed:false, deaths:0, clip:""},
+        {name:"Clover Dancers", completed:false, deaths:0, clip:""},
+        {name:"Crawfather", completed:false, deaths:0, clip:""},
+        {name:"Crust King Khann", completed:false, deaths:0, clip:""},
+        {name:"Gurr the Outcast", completed:false, deaths:0, clip:""},
+        {name:"Lost Garmond", completed:false, deaths:0, clip:""},
+        {name:"Lost Lace", completed:false, deaths:0, clip:""},
+        {name:"Nyleth", completed:false, deaths:0, clip:""},
+        {name:"Palestag", completed:false, deaths:0, clip:""},
+        {name:"Pinstress", completed:false, deaths:0, clip:""},
+        {name:"Plasmified Zango", completed:false, deaths:0, clip:""},
+        {name:"Shrine Guardian Seth", completed:false, deaths:0, clip:""},
+        {name:"Skarrsinger Karmelita", completed:false, deaths:0, clip:""},
+        {name:"Tormented Trobbio", completed:false, deaths:0, clip:""},
+        {name:"Watcher at the Edge", completed:false, deaths:0, clip:""}
+      ]
+    }
+  ]
+},
+  
   sekiro: {
     name:"Sekiro", deaths:0,
     sections:[
@@ -1433,7 +1500,7 @@ function createGame(gameKey) {
 
 // ─── INIT ────────────────────────────────────────────────
 
-const gameOrder = ["eldenring","hollowknight","sekiro","liesofp","bloodborne","darksouls1","darksouls2","darksouls3"];
+const gameOrder = ["eldenring","hollowknight","hollowknight:silksong","sekiro","liesofp","bloodborne","darksouls1","darksouls2","darksouls3"];
 gameOrder.forEach(k => createGame(k));
 
 // Global stat
