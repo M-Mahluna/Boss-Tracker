@@ -683,8 +683,266 @@ const YT_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><pat
 const TW_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>`;
 
 // ─── GAMES DATA ──────────────────────────────────────────
-const games = {
-  eldenring: {
+const games = { 
+  silksong: {
+  name: "Hollow Knight: Silksong",
+  deaths: 0,
+  sections: [
+    {
+      name: "Act 1",
+      bosses: [
+        {name:"Bell Beast", completed:false, deaths:0, clip:""},
+        {name:"Fourth Chorus", completed:false, deaths:0, clip:""},
+        {name:"Great Conchflies", completed:false, deaths:0, clip:""},
+        {name:"Lace (Deep Docks)", completed:false, deaths:0, clip:""},
+        {name:"Last Judge", completed:false, deaths:0, clip:""},
+        {name:"Moorwing", completed:false, deaths:0, clip:""},
+        {name:"Moss Mother (Ruined Chapel)", completed:false, deaths:0, clip:""},
+        {name:"Moss Mother (Weavenest Atla)", completed:false, deaths:0, clip:""},
+        {name:"Phantom", completed:false, deaths:0, clip:""},
+        {name:"Savage Beastfly (Chapel of the Beast)", completed:false, deaths:0, clip:""},
+        {name:"Sister Splinter", completed:false, deaths:0, clip:""},
+        {name:"Skull Tyrant", completed:false, deaths:0, clip:""},
+        {name:"Widow", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Act 2",
+      bosses: [
+        {name:"Broodmother", completed:false, deaths:0, clip:""},
+        {name:"Cogwork Dancers", completed:false, deaths:0, clip:""},
+        {name:"Disgraced Chef Lugoli", completed:false, deaths:0, clip:""},
+        {name:"Father of the Flame", completed:false, deaths:0, clip:""},
+        {name:"First Sinner", completed:false, deaths:0, clip:""},
+        {name:"Forebrothers Signis & Gron", completed:false, deaths:0, clip:""},
+        {name:"Garmond and Zaza", completed:false, deaths:0, clip:""},
+        {name:"Grand Mother Silk", completed:false, deaths:0, clip:""},
+        {name:"Groal the Great", completed:false, deaths:0, clip:""},
+        {name:"Lace (The Cradle)", completed:false, deaths:0, clip:""},
+        {name:"Raging Conchfly", completed:false, deaths:0, clip:""},
+        {name:"Savage Beastfly (Far Fields)", completed:false, deaths:0, clip:""},
+        {name:"Second Sentinel", completed:false, deaths:0, clip:""},
+        {name:"Shakra", completed:false, deaths:0, clip:""},
+        {name:"The Unravelled", completed:false, deaths:0, clip:""},
+        {name:"Trobbio", completed:false, deaths:0, clip:""},
+        {name:"Voltvyrm", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Act 3",
+      bosses: [
+        {name:"Bell Eater", completed:false, deaths:0, clip:""},
+        {name:"Clover Dancers", completed:false, deaths:0, clip:""},
+        {name:"Crawfather", completed:false, deaths:0, clip:""},
+        {name:"Crust King Khann", completed:false, deaths:0, clip:""},
+        {name:"Gurr the Outcast", completed:false, deaths:0, clip:""},
+        {name:"Lost Garmond", completed:false, deaths:0, clip:""},
+        {name:"Lost Lace", completed:false, deaths:0, clip:""},
+        {name:"Nyleth", completed:false, deaths:0, clip:""},
+        {name:"Palestag", completed:false, deaths:0, clip:""},
+        {name:"Pinstress", completed:false, deaths:0, clip:""},
+        {name:"Plasmified Zango", completed:false, deaths:0, clip:""},
+        {name:"Shrine Guardian Seth", completed:false, deaths:0, clip:""},
+        {name:"Skarrsinger Karmelita", completed:false, deaths:0, clip:""},
+        {name:"Tormented Trobbio", completed:false, deaths:0, clip:""},
+        {name:"Watcher at the Edge", completed:false, deaths:0, clip:""}
+      ]
+    }
+  ]
+},
+
+  hollowknight: {
+  name: "Hollow Knight",
+  deaths: 0,
+  sections: [
+    {
+      name: "Bosses",
+      bosses: [
+        {name:"Broken Vessel", completed:false, deaths:0, clip:""},
+        {name:"Brooding Mawlek", completed:false, deaths:0, clip:""},
+        {name:"Brothers Oro & Mato", completed:false, deaths:0, clip:""},
+        {name:"The Collector", completed:false, deaths:0, clip:""},
+        {name:"Crystal Guardian", completed:false, deaths:0, clip:""},
+        {name:"Dung Defender", completed:false, deaths:0, clip:""},
+        {name:"False Knight", completed:false, deaths:0, clip:""},
+        {name:"Flukemarm", completed:false, deaths:0, clip:""},
+        {name:"God Tamer", completed:false, deaths:0, clip:""},
+        {name:"Great Nailsage Sly", completed:false, deaths:0, clip:""},
+        {name:"Troupe Master Grimm", completed:false, deaths:0, clip:""},
+        {name:"Gruz Mother", completed:false, deaths:0, clip:""},
+        {name:"Hive Knight", completed:false, deaths:0, clip:""},
+        {name:"The Hollow Knight", completed:false, deaths:0, clip:""},
+        {name:"Hornet Protector", completed:false, deaths:0, clip:""},
+        {name:"Mantis Lords", completed:false, deaths:0, clip:""},
+        {name:"Massive Moss Charger", completed:false, deaths:0, clip:""},
+        {name:"Nosk", completed:false, deaths:0, clip:""},
+        {name:"Oblobbles", completed:false, deaths:0, clip:""},
+        {name:"Paintmaster Sheo", completed:false, deaths:0, clip:""},
+        {name:"The Radiance", completed:false, deaths:0, clip:""},
+        {name:"Soul Master", completed:false, deaths:0, clip:""},
+        {name:"Soul Warrior", completed:false, deaths:0, clip:""},
+        {name:"Traitor Lord", completed:false, deaths:0, clip:""},
+        {name:"Uumuu", completed:false, deaths:0, clip:""},
+        {name:"Vengefly King", completed:false, deaths:0, clip:""},
+        {name:"Watcher Knight", completed:false, deaths:0, clip:""},
+        {name:"Zote the Mighty", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Warrior Dreams",
+      bosses: [
+        {name:"Elder Hu", completed:false, deaths:0, clip:""},
+        {name:"Galien", completed:false, deaths:0, clip:""},
+        {name:"Gorb", completed:false, deaths:0, clip:""},
+        {name:"Markoth", completed:false, deaths:0, clip:""},
+        {name:"Marmu", completed:false, deaths:0, clip:""},
+        {name:"No Eyes", completed:false, deaths:0, clip:""},
+        {name:"Xero", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Boss Variants",
+      bosses: [
+        {name:"Absolute Radiance", completed:false, deaths:0, clip:""},
+        {name:"Enraged Guardian", completed:false, deaths:0, clip:""},
+        {name:"Failed Champion", completed:false, deaths:0, clip:""},
+        {name:"Grey Prince Zote", completed:false, deaths:0, clip:""},
+        {name:"Hornet Sentinel", completed:false, deaths:0, clip:""},
+        {name:"Lost Kin", completed:false, deaths:0, clip:""},
+        {name:"Nightmare King Grimm", completed:false, deaths:0, clip:""},
+        {name:"Pure Vessel", completed:false, deaths:0, clip:""},
+        {name:"Sisters of Battle", completed:false, deaths:0, clip:""},
+        {name:"Soul Tyrant", completed:false, deaths:0, clip:""},
+        {name:"White Defender", completed:false, deaths:0, clip:""},
+        {name:"Winged Nosk", completed:false, deaths:0, clip:""}
+      ]
+    }
+  ]
+},
+  
+  sekiro: {
+  name: "Sekiro",
+  deaths: 0,
+  sections: [
+    {
+      name: "Main Bosse",
+      bosses: [
+        {name:"Gyoubu Masataka Oniwa", completed:false, deaths:0, clip:""},
+        {name:"Lady Butterfly", completed:false, deaths:0, clip:""},
+        {name:"Genichiro Ashina", completed:false, deaths:0, clip:""},
+        {name:"Folding Screen Monkeys", completed:false, deaths:0, clip:""},
+        {name:"Guardian Ape", completed:false, deaths:0, clip:""},
+        {name:"Headless Ape", completed:false, deaths:0, clip:""},
+        {name:"Corrupted Monk", completed:false, deaths:0, clip:""},
+        {name:"Emma, the Gentle Blade", completed:false, deaths:0, clip:""},
+        {name:"Isshin Ashina", completed:false, deaths:0, clip:""},
+        {name:"Great Shinobi Owl", completed:false, deaths:0, clip:""},
+        {name:"True Corrupted Monk", completed:false, deaths:0, clip:""},
+        {name:"Divine Dragon", completed:false, deaths:0, clip:""},
+        {name:"Owl (Father)", completed:false, deaths:0, clip:""},
+        {name:"Demon of Hatred", completed:false, deaths:0, clip:""},
+        {name:"Isshin, the Sword Saint", completed:false, deaths:0, clip:""},
+        {name:"Inner Father (Gauntlet)", completed:false, deaths:0, clip:""},
+        {name:"Inner Genichiro (Gauntlet)", completed:false, deaths:0, clip:""},
+        {name:"Inner Isshin (Gauntlet)", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Mini Bosse",
+      bosses: [
+        {name:"Leader Shigenori Yamauchi", completed:false, deaths:0, clip:""},
+        {name:"General Naomori Kawarada", completed:false, deaths:0, clip:""},
+        {name:"Chained Ogre", completed:false, deaths:0, clip:""},
+        {name:"General Tenzen Yamauchi", completed:false, deaths:0, clip:""},
+        {name:"Shinobi Hunter Enshin of Misen", completed:false, deaths:0, clip:""},
+        {name:"Juzou the Drunkard", completed:false, deaths:0, clip:""},
+        {name:"Blazing Bull", completed:false, deaths:0, clip:""},
+        {name:"General Kuranosuke Matsumoto", completed:false, deaths:0, clip:""},
+        {name:"Seven Ashina Spears – Shikibu Toshikatsu Yamauchi", completed:false, deaths:0, clip:""},
+        {name:"Lone Shadow Longswordsman", completed:false, deaths:0, clip:""},
+        {name:"Ashina Elite – Jinsuke Saze", completed:false, deaths:0, clip:""},
+        {name:"Headless", completed:false, deaths:0, clip:""},
+        {name:"Great Serpent", completed:false, deaths:0, clip:""},
+        {name:"Long-arm Centipede Giraffe", completed:false, deaths:0, clip:""},
+        {name:"Snake Eyes Shirahagi", completed:false, deaths:0, clip:""},
+        {name:"Tokujiro the Glutton", completed:false, deaths:0, clip:""},
+        {name:"Mist Noble", completed:false, deaths:0, clip:""},
+        {name:"O'Rin of the Water", completed:false, deaths:0, clip:""},
+        {name:"Shichimen Warrior", completed:false, deaths:0, clip:""},
+        {name:"Lone Shadow Vilehand", completed:false, deaths:0, clip:""},
+        {name:"Lone Shadow Masanaga the Spear-bearer", completed:false, deaths:0, clip:""},
+        {name:"Armored Warrior", completed:false, deaths:0, clip:""},
+        {name:"Long Arm Centipede Sen-Un", completed:false, deaths:0, clip:""},
+        {name:"Snake Eyes Shirafuji", completed:false, deaths:0, clip:""},
+        {name:"Sakura Bull of the Palace", completed:false, deaths:0, clip:""},
+        {name:"Okami Leader Shizu", completed:false, deaths:0, clip:""},
+        {name:"Great Colored Carp", completed:false, deaths:0, clip:""},
+        {name:"Seven Ashina Spears – Shume Masaji Oniwa", completed:false, deaths:0, clip:""},
+        {name:"Ashina Elite – Ujinari Mizuo", completed:false, deaths:0, clip:""},
+        {name:"Shigekichi of the Red Guard", completed:false, deaths:0, clip:""}
+      ]
+    }
+  ]
+},
+
+ liesofp: {
+  name: "Lies of P",
+  deaths: 0,
+  sections: [
+    {
+      name: "Main Bosses",
+      bosses: [
+        {name:"Parade Master", completed:false, deaths:0, clip:""},
+        {name:"Scrapped Watchman", completed:false, deaths:0, clip:""},
+        {name:"King's Flame, Fuoco", completed:false, deaths:0, clip:""},
+        {name:"Fallen Archbishop Andreus", completed:false, deaths:0, clip:""},
+        {name:"Eldest of the Black Rabbit Brotherhood", completed:false, deaths:0, clip:""},
+        {name:"King of Puppets", completed:false, deaths:0, clip:""},
+        {name:"Romeo, King of Puppets", completed:false, deaths:0, clip:""},
+        {name:"Champion Victor", completed:false, deaths:0, clip:""},
+        {name:"Green Monster of the Swamp", completed:false, deaths:0, clip:""},
+        {name:"Puppet-Devouring Green Monster", completed:false, deaths:0, clip:""},
+        {name:"Corrupted Parade Master", completed:false, deaths:0, clip:""},
+        {name:"Black Rabbit Brotherhood", completed:false, deaths:0, clip:""},
+        {name:"Laxasia the Complete", completed:false, deaths:0, clip:""},
+        {name:"Simon Manus, Awakened God", completed:false, deaths:0, clip:""},
+        {name:"Nameless Puppet", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "Mini Bosses",
+      bosses: [
+        {name:"Mad Donkey", completed:false, deaths:0, clip:""},
+        {name:"Puppet of the Future", completed:false, deaths:0, clip:""},
+        {name:"Survivor", completed:false, deaths:0, clip:""},
+        {name:"The Atoned", completed:false, deaths:0, clip:""},
+        {name:"White Lady", completed:false, deaths:0, clip:""},
+        {name:"Mad Clown Puppet", completed:false, deaths:0, clip:""},
+        {name:"Owl Doctor", completed:false, deaths:0, clip:""},
+        {name:"Walker of Illusions", completed:false, deaths:0, clip:""},
+        {name:"Door Guardian", completed:false, deaths:0, clip:""},
+        {name:"Robber Weasel", completed:false, deaths:0, clip:""},
+        {name:"Red Fox", completed:false, deaths:0, clip:""},
+        {name:"Black Cat", completed:false, deaths:0, clip:""}
+      ]
+    },
+    {
+      name: "DLC Overture",
+      bosses: [
+        {name:"Tyrannical Predator", completed:false, deaths:0, clip:""},
+        {name:"Markiona, Puppeteer of Death", completed:false, deaths:0, clip:""},
+        {name:"Veronique, Leader of the Sweepers", completed:false, deaths:0, clip:""},
+        {name:"Two-faced Overseer", completed:false, deaths:0, clip:""},
+        {name:"Premetamorphic Green Hunter", completed:false, deaths:0, clip:""},
+        {name:"Anguished Guardian of the Ruins", completed:false, deaths:0, clip:""},
+        {name:"Lumacchio, Leader of the Bastards", completed:false, deaths:0, clip:""},
+        {name:"Arlecchino, the Blood Artist", completed:false, deaths:0, clip:""}
+      ]
+    }
+  ]
+},
+
+eldenring: {
     name:"Elden Ring",
     deaths: 1062,
     sections: [
@@ -1044,264 +1302,6 @@ const games = {
       ]
   },
   
-hollowknight: {
-  name: "Hollow Knight",
-  deaths: 0,
-  sections: [
-    {
-      name: "Bosses",
-      bosses: [
-        {name:"Broken Vessel", completed:false, deaths:0, clip:""},
-        {name:"Brooding Mawlek", completed:false, deaths:0, clip:""},
-        {name:"Brothers Oro & Mato", completed:false, deaths:0, clip:""},
-        {name:"The Collector", completed:false, deaths:0, clip:""},
-        {name:"Crystal Guardian", completed:false, deaths:0, clip:""},
-        {name:"Dung Defender", completed:false, deaths:0, clip:""},
-        {name:"False Knight", completed:false, deaths:0, clip:""},
-        {name:"Flukemarm", completed:false, deaths:0, clip:""},
-        {name:"God Tamer", completed:false, deaths:0, clip:""},
-        {name:"Great Nailsage Sly", completed:false, deaths:0, clip:""},
-        {name:"Troupe Master Grimm", completed:false, deaths:0, clip:""},
-        {name:"Gruz Mother", completed:false, deaths:0, clip:""},
-        {name:"Hive Knight", completed:false, deaths:0, clip:""},
-        {name:"The Hollow Knight", completed:false, deaths:0, clip:""},
-        {name:"Hornet Protector", completed:false, deaths:0, clip:""},
-        {name:"Mantis Lords", completed:false, deaths:0, clip:""},
-        {name:"Massive Moss Charger", completed:false, deaths:0, clip:""},
-        {name:"Nosk", completed:false, deaths:0, clip:""},
-        {name:"Oblobbles", completed:false, deaths:0, clip:""},
-        {name:"Paintmaster Sheo", completed:false, deaths:0, clip:""},
-        {name:"The Radiance", completed:false, deaths:0, clip:""},
-        {name:"Soul Master", completed:false, deaths:0, clip:""},
-        {name:"Soul Warrior", completed:false, deaths:0, clip:""},
-        {name:"Traitor Lord", completed:false, deaths:0, clip:""},
-        {name:"Uumuu", completed:false, deaths:0, clip:""},
-        {name:"Vengefly King", completed:false, deaths:0, clip:""},
-        {name:"Watcher Knight", completed:false, deaths:0, clip:""},
-        {name:"Zote the Mighty", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Warrior Dreams",
-      bosses: [
-        {name:"Elder Hu", completed:false, deaths:0, clip:""},
-        {name:"Galien", completed:false, deaths:0, clip:""},
-        {name:"Gorb", completed:false, deaths:0, clip:""},
-        {name:"Markoth", completed:false, deaths:0, clip:""},
-        {name:"Marmu", completed:false, deaths:0, clip:""},
-        {name:"No Eyes", completed:false, deaths:0, clip:""},
-        {name:"Xero", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Boss Variants",
-      bosses: [
-        {name:"Absolute Radiance", completed:false, deaths:0, clip:""},
-        {name:"Enraged Guardian", completed:false, deaths:0, clip:""},
-        {name:"Failed Champion", completed:false, deaths:0, clip:""},
-        {name:"Grey Prince Zote", completed:false, deaths:0, clip:""},
-        {name:"Hornet Sentinel", completed:false, deaths:0, clip:""},
-        {name:"Lost Kin", completed:false, deaths:0, clip:""},
-        {name:"Nightmare King Grimm", completed:false, deaths:0, clip:""},
-        {name:"Pure Vessel", completed:false, deaths:0, clip:""},
-        {name:"Sisters of Battle", completed:false, deaths:0, clip:""},
-        {name:"Soul Tyrant", completed:false, deaths:0, clip:""},
-        {name:"White Defender", completed:false, deaths:0, clip:""},
-        {name:"Winged Nosk", completed:false, deaths:0, clip:""}
-      ]
-    }
-  ]
-},
-  
-  silksong: {
-  name: "Hollow Knight: Silksong",
-  deaths: 0,
-  sections: [
-    {
-      name: "Act 1",
-      bosses: [
-        {name:"Bell Beast", completed:false, deaths:0, clip:""},
-        {name:"Fourth Chorus", completed:false, deaths:0, clip:""},
-        {name:"Great Conchflies", completed:false, deaths:0, clip:""},
-        {name:"Lace (Deep Docks)", completed:false, deaths:0, clip:""},
-        {name:"Last Judge", completed:false, deaths:0, clip:""},
-        {name:"Moorwing", completed:false, deaths:0, clip:""},
-        {name:"Moss Mother (Ruined Chapel)", completed:false, deaths:0, clip:""},
-        {name:"Moss Mother (Weavenest Atla)", completed:false, deaths:0, clip:""},
-        {name:"Phantom", completed:false, deaths:0, clip:""},
-        {name:"Savage Beastfly (Chapel of the Beast)", completed:false, deaths:0, clip:""},
-        {name:"Sister Splinter", completed:false, deaths:0, clip:""},
-        {name:"Skull Tyrant", completed:false, deaths:0, clip:""},
-        {name:"Widow", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Act 2",
-      bosses: [
-        {name:"Broodmother", completed:false, deaths:0, clip:""},
-        {name:"Cogwork Dancers", completed:false, deaths:0, clip:""},
-        {name:"Disgraced Chef Lugoli", completed:false, deaths:0, clip:""},
-        {name:"Father of the Flame", completed:false, deaths:0, clip:""},
-        {name:"First Sinner", completed:false, deaths:0, clip:""},
-        {name:"Forebrothers Signis & Gron", completed:false, deaths:0, clip:""},
-        {name:"Garmond and Zaza", completed:false, deaths:0, clip:""},
-        {name:"Grand Mother Silk", completed:false, deaths:0, clip:""},
-        {name:"Groal the Great", completed:false, deaths:0, clip:""},
-        {name:"Lace (The Cradle)", completed:false, deaths:0, clip:""},
-        {name:"Raging Conchfly", completed:false, deaths:0, clip:""},
-        {name:"Savage Beastfly (Far Fields)", completed:false, deaths:0, clip:""},
-        {name:"Second Sentinel", completed:false, deaths:0, clip:""},
-        {name:"Shakra", completed:false, deaths:0, clip:""},
-        {name:"The Unravelled", completed:false, deaths:0, clip:""},
-        {name:"Trobbio", completed:false, deaths:0, clip:""},
-        {name:"Voltvyrm", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Act 3",
-      bosses: [
-        {name:"Bell Eater", completed:false, deaths:0, clip:""},
-        {name:"Clover Dancers", completed:false, deaths:0, clip:""},
-        {name:"Crawfather", completed:false, deaths:0, clip:""},
-        {name:"Crust King Khann", completed:false, deaths:0, clip:""},
-        {name:"Gurr the Outcast", completed:false, deaths:0, clip:""},
-        {name:"Lost Garmond", completed:false, deaths:0, clip:""},
-        {name:"Lost Lace", completed:false, deaths:0, clip:""},
-        {name:"Nyleth", completed:false, deaths:0, clip:""},
-        {name:"Palestag", completed:false, deaths:0, clip:""},
-        {name:"Pinstress", completed:false, deaths:0, clip:""},
-        {name:"Plasmified Zango", completed:false, deaths:0, clip:""},
-        {name:"Shrine Guardian Seth", completed:false, deaths:0, clip:""},
-        {name:"Skarrsinger Karmelita", completed:false, deaths:0, clip:""},
-        {name:"Tormented Trobbio", completed:false, deaths:0, clip:""},
-        {name:"Watcher at the Edge", completed:false, deaths:0, clip:""}
-      ]
-    }
-  ]
-},
-  
-  sekiro: {
-  name: "Sekiro",
-  deaths: 0,
-  sections: [
-    {
-      name: "Main Bosse",
-      bosses: [
-        {name:"Gyoubu Masataka Oniwa", completed:false, deaths:0, clip:""},
-        {name:"Lady Butterfly", completed:false, deaths:0, clip:""},
-        {name:"Genichiro Ashina", completed:false, deaths:0, clip:""},
-        {name:"Folding Screen Monkeys", completed:false, deaths:0, clip:""},
-        {name:"Guardian Ape", completed:false, deaths:0, clip:""},
-        {name:"Headless Ape", completed:false, deaths:0, clip:""},
-        {name:"Corrupted Monk", completed:false, deaths:0, clip:""},
-        {name:"Emma, the Gentle Blade", completed:false, deaths:0, clip:""},
-        {name:"Isshin Ashina", completed:false, deaths:0, clip:""},
-        {name:"Great Shinobi Owl", completed:false, deaths:0, clip:""},
-        {name:"True Corrupted Monk", completed:false, deaths:0, clip:""},
-        {name:"Divine Dragon", completed:false, deaths:0, clip:""},
-        {name:"Owl (Father)", completed:false, deaths:0, clip:""},
-        {name:"Demon of Hatred", completed:false, deaths:0, clip:""},
-        {name:"Isshin, the Sword Saint", completed:false, deaths:0, clip:""},
-        {name:"Inner Father (Gauntlet)", completed:false, deaths:0, clip:""},
-        {name:"Inner Genichiro (Gauntlet)", completed:false, deaths:0, clip:""},
-        {name:"Inner Isshin (Gauntlet)", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Mini Bosse",
-      bosses: [
-        {name:"Leader Shigenori Yamauchi", completed:false, deaths:0, clip:""},
-        {name:"General Naomori Kawarada", completed:false, deaths:0, clip:""},
-        {name:"Chained Ogre", completed:false, deaths:0, clip:""},
-        {name:"General Tenzen Yamauchi", completed:false, deaths:0, clip:""},
-        {name:"Shinobi Hunter Enshin of Misen", completed:false, deaths:0, clip:""},
-        {name:"Juzou the Drunkard", completed:false, deaths:0, clip:""},
-        {name:"Blazing Bull", completed:false, deaths:0, clip:""},
-        {name:"General Kuranosuke Matsumoto", completed:false, deaths:0, clip:""},
-        {name:"Seven Ashina Spears – Shikibu Toshikatsu Yamauchi", completed:false, deaths:0, clip:""},
-        {name:"Lone Shadow Longswordsman", completed:false, deaths:0, clip:""},
-        {name:"Ashina Elite – Jinsuke Saze", completed:false, deaths:0, clip:""},
-        {name:"Headless", completed:false, deaths:0, clip:""},
-        {name:"Great Serpent", completed:false, deaths:0, clip:""},
-        {name:"Long-arm Centipede Giraffe", completed:false, deaths:0, clip:""},
-        {name:"Snake Eyes Shirahagi", completed:false, deaths:0, clip:""},
-        {name:"Tokujiro the Glutton", completed:false, deaths:0, clip:""},
-        {name:"Mist Noble", completed:false, deaths:0, clip:""},
-        {name:"O'Rin of the Water", completed:false, deaths:0, clip:""},
-        {name:"Shichimen Warrior", completed:false, deaths:0, clip:""},
-        {name:"Lone Shadow Vilehand", completed:false, deaths:0, clip:""},
-        {name:"Lone Shadow Masanaga the Spear-bearer", completed:false, deaths:0, clip:""},
-        {name:"Armored Warrior", completed:false, deaths:0, clip:""},
-        {name:"Long Arm Centipede Sen-Un", completed:false, deaths:0, clip:""},
-        {name:"Snake Eyes Shirafuji", completed:false, deaths:0, clip:""},
-        {name:"Sakura Bull of the Palace", completed:false, deaths:0, clip:""},
-        {name:"Okami Leader Shizu", completed:false, deaths:0, clip:""},
-        {name:"Great Colored Carp", completed:false, deaths:0, clip:""},
-        {name:"Seven Ashina Spears – Shume Masaji Oniwa", completed:false, deaths:0, clip:""},
-        {name:"Ashina Elite – Ujinari Mizuo", completed:false, deaths:0, clip:""},
-        {name:"Shigekichi of the Red Guard", completed:false, deaths:0, clip:""}
-      ]
-    }
-  ]
-},
-
- liesofp: {
-  name: "Lies of P",
-  deaths: 0,
-  sections: [
-    {
-      name: "Main Bosses",
-      bosses: [
-        {name:"Parade Master", completed:false, deaths:0, clip:""},
-        {name:"Scrapped Watchman", completed:false, deaths:0, clip:""},
-        {name:"King's Flame, Fuoco", completed:false, deaths:0, clip:""},
-        {name:"Fallen Archbishop Andreus", completed:false, deaths:0, clip:""},
-        {name:"Eldest of the Black Rabbit Brotherhood", completed:false, deaths:0, clip:""},
-        {name:"King of Puppets", completed:false, deaths:0, clip:""},
-        {name:"Romeo, King of Puppets", completed:false, deaths:0, clip:""},
-        {name:"Champion Victor", completed:false, deaths:0, clip:""},
-        {name:"Green Monster of the Swamp", completed:false, deaths:0, clip:""},
-        {name:"Puppet-Devouring Green Monster", completed:false, deaths:0, clip:""},
-        {name:"Corrupted Parade Master", completed:false, deaths:0, clip:""},
-        {name:"Black Rabbit Brotherhood", completed:false, deaths:0, clip:""},
-        {name:"Laxasia the Complete", completed:false, deaths:0, clip:""},
-        {name:"Simon Manus, Awakened God", completed:false, deaths:0, clip:""},
-        {name:"Nameless Puppet", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "Mini Bosses",
-      bosses: [
-        {name:"Mad Donkey", completed:false, deaths:0, clip:""},
-        {name:"Puppet of the Future", completed:false, deaths:0, clip:""},
-        {name:"Survivor", completed:false, deaths:0, clip:""},
-        {name:"The Atoned", completed:false, deaths:0, clip:""},
-        {name:"White Lady", completed:false, deaths:0, clip:""},
-        {name:"Mad Clown Puppet", completed:false, deaths:0, clip:""},
-        {name:"Owl Doctor", completed:false, deaths:0, clip:""},
-        {name:"Walker of Illusions", completed:false, deaths:0, clip:""},
-        {name:"Door Guardian", completed:false, deaths:0, clip:""},
-        {name:"Robber Weasel", completed:false, deaths:0, clip:""},
-        {name:"Red Fox", completed:false, deaths:0, clip:""},
-        {name:"Black Cat", completed:false, deaths:0, clip:""}
-      ]
-    },
-    {
-      name: "DLC Overture",
-      bosses: [
-        {name:"Tyrannical Predator", completed:false, deaths:0, clip:""},
-        {name:"Markiona, Puppeteer of Death", completed:false, deaths:0, clip:""},
-        {name:"Veronique, Leader of the Sweepers", completed:false, deaths:0, clip:""},
-        {name:"Two-faced Overseer", completed:false, deaths:0, clip:""},
-        {name:"Premetamorphic Green Hunter", completed:false, deaths:0, clip:""},
-        {name:"Anguished Guardian of the Ruins", completed:false, deaths:0, clip:""},
-        {name:"Lumacchio, Leader of the Bastards", completed:false, deaths:0, clip:""},
-        {name:"Arlecchino, the Blood Artist", completed:false, deaths:0, clip:""}
-      ]
-    }
-  ]
-},
-
   bloodborne: {
     name:"Bloodborne", deaths:193,
     sections:[
