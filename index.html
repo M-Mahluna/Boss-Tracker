@@ -623,7 +623,19 @@ body {
 /* ═══════════════════════════════════════
    RESPONSIVE: hide sidebars on small
 ═══════════════════════════════════════ */
-
+.game-notes {
+  width: 100%;
+  margin: 12px 0 20px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(230,184,0,0.15);
+  border-radius: 3px;
+  color: #eaeaea;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 0.95rem;
+  text-align: left;
+  line-height: 1.6;
+}
 
 </style>
 </head>
@@ -687,6 +699,7 @@ const games = {
   hollowknight: {
   name: "Hollow Knight",
   deaths: 37,
+  notes: "Zweiter Run, erster war Offstream zusammen mit Mango | 112% geschafft | Path of Pain in 3h 10min geschafft | Pantheon 5 im 13ten Versuch geschafft mit einer Gesamtzeit von 9h 56min 59sek",
   sections: [
     {
       name: "Bosses",
@@ -756,6 +769,7 @@ const games = {
 silksong: {
   name: "Hollow Knight: Silksong",
   deaths: 0,
+  notes: "Noch nicht gespielt",
   sections: [
     {
       name: "Act 1",
@@ -823,6 +837,7 @@ silksong: {
   sekiro: {
   name: "Sekiro",
   deaths: 0,
+  notes: "Noch nicht gespielt",
   sections: [
     {
       name: "Main Bosse",
@@ -888,6 +903,7 @@ silksong: {
  liesofp: {
   name: "Lies of P",
   deaths: 0,
+  notes: "Noch nicht gespielt",
   sections: [
     {
       name: "Main Bosses",
@@ -945,6 +961,7 @@ silksong: {
 eldenring: {
     name:"Elden Ring",
     deaths: 1062,
+    notes: "First Time ohne BSG gemacht",
     sections: [
   {
     name: "Limgrave",
@@ -1303,7 +1320,9 @@ eldenring: {
   },
   
   bloodborne: {
-    name:"Bloodborne", deaths:193,
+    name:"Bloodborne", 
+    deaths:193,
+    notes: "First Time ohne BSG gemacht",
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Cleric Beast",completed:true,deaths:1,clip:"https://youtu.be/ai58t1mshoI?si=_rk6RDPLIxGhclcf&t=12621",thumbnail:"BossNr1.png"},
@@ -1334,7 +1353,9 @@ eldenring: {
   },
 
   darksouls1: {
-    name:"Dark Souls 1", deaths:22,
+    name:"Dark Souls 1", 
+    deaths:22,
+    notes: "Dieser Run wurde wegen einem Event richtung perfektion gebracht",
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Asylum Demon",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=0lRe2qUtQdeOX-h7&t=385",thumbnail:""},
@@ -1366,7 +1387,9 @@ eldenring: {
   },
 
   darksouls2: {
-    name:"Dark Souls 2", deaths:0,
+    name:"Dark Souls 2", 
+    deaths:0,
+    notes: "Leider sind die VODs nicht mehr vorhanden, wodruch die Infos fehlen, aber wir wissen das Sie es geschafft hat",
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"The Last Giant",completed:true},{name:"The Pursuer",completed:true},{name:"Dragonrider",completed:true},{name:"Old Dragonslayer",completed:true},{name:"Flexile Sentry",completed:true},{name:"Ruin Sentinels",completed:true},{name:"Belfry Gargoyles",completed:true},{name:"Lost Sinner",completed:true},{name:"Executioner's Chariot",completed:true},{name:"Skeleton Lords",completed:true},{name:"Covetous Demon",completed:true},{name:"Mytha, the Baneful Queen",completed:true},{name:"Smelter Demon",completed:true},{name:"Old Iron King",completed:true},{name:"Scorpioness Najka",completed:true},{name:"Royal Rat Vanguard",completed:true},{name:"Royal Rat Authority",completed:true},{name:"The Duke's Dear Freja",completed:true},{name:"Prowling Magus and Congregation",completed:true},{name:"The Rotten",completed:true},{name:"Dragonrider (Twin)",completed:true},{name:"Looking Glass Knight",completed:true},{name:"Demon of Song",completed:true},{name:"Velstadt, the Royal Aegis",completed:true},{name:"Vendrick",completed:true},{name:"Guardian Dragon",completed:true},{name:"Ancient Dragon",completed:true},{name:"Giant Lord",completed:true},{name:"Throne Watcher and Defender",completed:true},{name:"Nashandra",completed:true},{name:"Aldia, Scholar of the First Sin",completed:true},{name:"Darklurker",completed:true}
@@ -1384,7 +1407,9 @@ eldenring: {
   },
 
   darksouls3: {
-    name:"Dark Souls 3", deaths:543,
+    name:"Dark Souls 3", 
+    deaths:543,
+    notes: "First Time ohne BSG gemacht",
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Iudex Gundyr",completed:true,deaths:6,clip:"https://youtu.be/2X4JCocPKLo?si=WTB5oQ8DQqUCUUH6&t=2180"},
@@ -1569,6 +1594,13 @@ function createGame(gameKey) {
   deathEl.innerHTML = `☠ Tode insgesamt: <strong style="margin-left:6px">${game.deaths}</strong>`;
   inner.appendChild(deathEl);
 
+ if(game.notes) {
+  const notesEl = document.createElement("div");
+  notesEl.className = "game-notes";
+  notesEl.textContent = game.notes;
+  inner.appendChild(notesEl);
+}
+  
   // Global progress
   const gLabel = document.createElement("div");
   gLabel.className = "prog-label";
