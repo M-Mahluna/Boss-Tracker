@@ -376,6 +376,23 @@ body {
   text-align: left;
 }
 
+.game-header-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.game-header-trophystat {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+  text-align: right;
+  padding-right: 16px;
+  border-right: 1px solid rgba(230,184,0,0.15);
+}
+
 .game-header-stat {
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   font-size: 0.7rem;
@@ -637,6 +654,99 @@ body {
   line-height: 1.6;
 }
 
+/* ═══════════════════════════════════════
+   TROPHY TICKER (seitliche laufende Anzeige)
+═══════════════════════════════════════ */
+
+.trophy-ticker {
+  position: fixed;
+  top: 0;
+  width: 210px;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 3;
+  pointer-events: none;
+  display: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+.trophy-ticker.left  { left: 0; }
+.trophy-ticker.right { right: 0; }
+
+/* Nur ab breitem Bildschirm sichtbar, damit es auf Mobile/kleinen Fenstern nicht überlappt */
+@media (min-width: 1400px) {
+  .trophy-ticker.active { display: block; }
+}
+
+.trophy-ticker-track {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 30px 14px;
+  animation-name: trophyScroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.trophy-ticker.right .trophy-ticker-track {
+  animation-direction: reverse;
+}
+
+@keyframes trophyScroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.trophy-item {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.trophy-item.locked {
+  color: rgba(200,180,180,0.55);
+  background: rgba(139,0,0,0.1);
+  border: 1px solid rgba(139,0,0,0.25);
+}
+
+.trophy-item.unlocked {
+  color: var(--gold-bright);
+  background: rgba(230,184,0,0.08);
+  border: 1px solid rgba(230,184,0,0.3);
+}
+
+/* ═══════════════════════════════════════
+   FOOTER / IMPRESSUM
+═══════════════════════════════════════ */
+
+#site-footer {
+  position: relative;
+  z-index: 2;
+  padding: 28px 20px 40px;
+  text-align: center;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+}
+
+#site-footer a {
+  color: var(--gold-bright);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(230,184,0,0.3);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#site-footer a:hover {
+  color: #fff;
+  border-color: var(--gold-bright);
+}
+
 </style>
 </head>
 <body>
@@ -657,6 +767,14 @@ body {
 
 <!-- Grain -->
 <div id="grain"></div>
+
+<!-- Trophäen-Ticker links/rechts, nur sichtbar wenn ein Spiel mit Trophäen aufgeklappt ist -->
+<div id="trophy-ticker-left" class="trophy-ticker left">
+  <div class="trophy-ticker-track" id="trophy-ticker-left-track"></div>
+</div>
+<div id="trophy-ticker-right" class="trophy-ticker right">
+  <div class="trophy-ticker-track" id="trophy-ticker-right-track"></div>
+</div>
 
 <div id="page-wrapper">
 <div class="container">
@@ -689,17 +807,94 @@ body {
 </div>
 </div>
 
+<!-- ═══════════════════════════════════════
+     IMPRESSUM
+     Trag hier deinen Impressum-Link in href="" ein.
+═══════════════════════════════════════ -->
+<footer id="site-footer">
+  <a href="HIER-IMPRESSUM-LINK-EINTRAGEN" target="_blank" rel="noopener noreferrer">Impressum</a>
+</footer>
+
 <script>
 // ─── SVG ICONS ───────────────────────────────────────────
 const YT_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
 const TW_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>`;
 
 // ─── GAMES DATA ──────────────────────────────────────────
-const games = { 
+// TROPHÄEN/ACHIEVEMENTS: Bei jedem Spiel gibt es jetzt ein Feld "trophies".
+// Trag dort pro Trophäe ein Objekt ein: {name:"Trophäenname", completed:true/false}
+// Beispiel: trophies: [ {name:"Erster Sieg", completed:true}, {name:"Meister", completed:false} ]
+const games = {
   hollowknight: {
   name: "Hollow Knight",
   deaths: 37,
   notes: "Zweiter Run, erster war Offstream zusammen mit Mango | 112% geschafft | Path of Pain in 3h 10min geschafft | Pantheon 5 im 13ten Versuch geschafft mit einer Gesamtzeit von 9h 56min 59sek",
+  // TROPHÄEN HIER EINTRAGEN:
+  trophies: [
+  {name:"Charmed", completed:false},
+  {name:"Enchanted", completed:false},
+  {name:"Blessed", completed:false},
+  {name:"Protected", completed:false},
+  {name:"Masked", completed:false},
+  {name:"Soulful", completed:false},
+  {name:"Worldsoul", completed:false},
+  {name:"Falsehood", completed:false},
+  {name:"Strength", completed:false},
+  {name:"Test of Resolve", completed:false},
+  {name:"Proof of Resolve", completed:false},
+  {name:"Illumination", completed:false},
+  {name:"Release", completed:false},
+  {name:"Peace", completed:false},
+  {name:"Honour", completed:false},
+  {name:"Respect", completed:false},
+  {name:"Obsession", completed:false},
+  {name:"Rivalry", completed:false},
+  {name:"Attunement", completed:false},
+  {name:"Awakening", completed:false},
+  {name:"Ascension", completed:false},
+  {name:"Grubfriend", completed:false},
+  {name:"Metamorphosis", completed:false},
+  {name:"Neglect", completed:false},
+  {name:"Purity", completed:false},
+  {name:"Happy Couple", completed:false},
+  {name:"Witness", completed:false},
+  {name:"Solace", completed:false},
+  {name:"Execution", completed:false},
+  {name:"Connection", completed:false},
+  {name:"Hope", completed:false},
+  {name:"Teacher", completed:false},
+  {name:"Watcher", completed:false},
+  {name:"Beast", completed:false},
+  {name:"Cartographer", completed:false},
+  {name:"Warrior", completed:false},
+  {name:"Conqueror", completed:false},
+  {name:"Fool", completed:false},
+  {name:"The Hollow Knight", completed:false},
+  {name:"Sealed Siblings", completed:false},
+  {name:"Dream No More", completed:false},
+  {name:"Void", completed:false},
+  {name:"Speedrun 1", completed:false},
+  {name:"Speedrun 2", completed:false},
+  {name:"Completion", completed:false},
+  {name:"Speed Completion", completed:false},
+  {name:"Steel Soul", completed:false},
+  {name:"Steel Heart", completed:false},
+  {name:"Keen Hunter", completed:false},
+  {name:"True Hunter", completed:false},
+  {name:"Passing of the Age", completed:false},
+  {name:"Mortality", completed:false},
+  {name:"Memory", completed:false},
+  {name:"Dark Romance", completed:false},
+  {name:"Grand Performance", completed:false},
+  {name:"Ritual", completed:false},
+  {name:"Banishment", completed:false},
+  {name:"Brotherhood", completed:false},
+  {name:"Inspiration", completed:false},
+  {name:"Focus", completed:false},
+  {name:"Soul & Shade", completed:false},
+  {name:"Embrace the Void", completed:false},
+  {name:"Pure Completion", completed:false}
+],
   sections: [
     {
       name: "Bosses",
@@ -770,6 +965,8 @@ silksong: {
   name: "Hollow Knight: Silksong",
   deaths: 0,
   notes: "Noch nicht gespielt",
+  // TROPHÄEN HIER EINTRAGEN:
+  trophies: [],
   sections: [
     {
       name: "Act 1",
@@ -838,6 +1035,8 @@ silksong: {
   name: "Sekiro",
   deaths: 0,
   notes: "Noch nicht gespielt",
+  // TROPHÄEN HIER EINTRAGEN:
+  trophies: [],
   sections: [
     {
       name: "Main Bosse",
@@ -904,6 +1103,8 @@ silksong: {
   name: "Lies of P",
   deaths: 0,
   notes: "Noch nicht gespielt",
+  // TROPHÄEN HIER EINTRAGEN:
+  trophies: [],
   sections: [
     {
       name: "Main Bosses",
@@ -962,6 +1163,8 @@ eldenring: {
     name:"Elden Ring",
     deaths: 1062,
     notes: "First Time ohne BSG gemacht",
+    // TROPHÄEN HIER EINTRAGEN:
+    trophies: [],
     sections: [
   {
     name: "Limgrave",
@@ -1323,6 +1526,8 @@ eldenring: {
     name:"Bloodborne", 
     deaths:193,
     notes: "First Time ohne BSG gemacht",
+    // TROPHÄEN HIER EINTRAGEN:
+    trophies: [],
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Cleric Beast",completed:true,deaths:1,clip:"https://youtu.be/ai58t1mshoI?si=_rk6RDPLIxGhclcf&t=12621",thumbnail:"BossNr1.png"},
@@ -1356,6 +1561,8 @@ eldenring: {
     name:"Dark Souls 1", 
     deaths:22,
     notes: "Dieser Run wurde wegen einem Event richtung perfektion gebracht",
+    // TROPHÄEN HIER EINTRAGEN:
+    trophies: [],
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Asylum Demon",completed:true,deaths:0,clip:"https://youtu.be/q1pxFjOxJUI?si=0lRe2qUtQdeOX-h7&t=385",thumbnail:""},
@@ -1390,6 +1597,8 @@ eldenring: {
     name:"Dark Souls 2", 
     deaths:0,
     notes: "Leider sind die VODs nicht mehr vorhanden, wodruch die Infos fehlen, aber wir wissen das Sie es geschafft hat",
+    // TROPHÄEN HIER EINTRAGEN:
+    trophies: [],
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"The Last Giant",completed:true},{name:"The Pursuer",completed:true},{name:"Dragonrider",completed:true},{name:"Old Dragonslayer",completed:true},{name:"Flexile Sentry",completed:true},{name:"Ruin Sentinels",completed:true},{name:"Belfry Gargoyles",completed:true},{name:"Lost Sinner",completed:true},{name:"Executioner's Chariot",completed:true},{name:"Skeleton Lords",completed:true},{name:"Covetous Demon",completed:true},{name:"Mytha, the Baneful Queen",completed:true},{name:"Smelter Demon",completed:true},{name:"Old Iron King",completed:true},{name:"Scorpioness Najka",completed:true},{name:"Royal Rat Vanguard",completed:true},{name:"Royal Rat Authority",completed:true},{name:"The Duke's Dear Freja",completed:true},{name:"Prowling Magus and Congregation",completed:true},{name:"The Rotten",completed:true},{name:"Dragonrider (Twin)",completed:true},{name:"Looking Glass Knight",completed:true},{name:"Demon of Song",completed:true},{name:"Velstadt, the Royal Aegis",completed:true},{name:"Vendrick",completed:true},{name:"Guardian Dragon",completed:true},{name:"Ancient Dragon",completed:true},{name:"Giant Lord",completed:true},{name:"Throne Watcher and Defender",completed:true},{name:"Nashandra",completed:true},{name:"Aldia, Scholar of the First Sin",completed:true},{name:"Darklurker",completed:true}
@@ -1410,6 +1619,8 @@ eldenring: {
     name:"Dark Souls 3", 
     deaths:543,
     notes: "First Time ohne BSG gemacht",
+    // TROPHÄEN HIER EINTRAGEN:
+    trophies: [],
     sections:[
       { name:"Hauptspiel", bosses:[
         {name:"Iudex Gundyr",completed:true,deaths:6,clip:"https://youtu.be/2X4JCocPKLo?si=WTB5oQ8DQqUCUUH6&t=2180"},
@@ -1543,6 +1754,69 @@ function buildProgressBar(pct) {
   return wrap;
 }
 
+// ─── TROPHY TICKER ───────────────────────────────────────
+
+const tickerLeftEl  = document.getElementById("trophy-ticker-left");
+const tickerRightEl = document.getElementById("trophy-ticker-right");
+const tickerLeftTrack  = document.getElementById("trophy-ticker-left-track");
+const tickerRightTrack = document.getElementById("trophy-ticker-right-track");
+
+function buildTrophyList(trophies) {
+  // Liste doppelt rendern, damit die Endlosschleife (translateY -50%) nahtlos ist
+  const frag = document.createDocumentFragment();
+  const renderOnce = () => {
+    trophies.forEach(t => {
+      const item = document.createElement("div");
+      item.className = "trophy-item " + (t.completed ? "unlocked" : "locked");
+      item.textContent = t.name;
+      frag.appendChild(item);
+    });
+  };
+  renderOnce();
+  renderOnce();
+  return frag;
+}
+
+function showTrophyTickers(game) {
+  const trophies = game.trophies || [];
+  if(trophies.length === 0) {
+    hideTrophyTickers();
+    return;
+  }
+
+  const locked   = trophies.filter(t => !t.completed);
+  const unlocked = trophies.filter(t => t.completed);
+
+  // Mäßige, gleichmäßige Laufgeschwindigkeit statt fixer Dauer für alle Listen
+  const speed = list => Math.max(20, list.length * 3.5) + "s";
+
+  tickerLeftTrack.innerHTML = "";
+  tickerRightTrack.innerHTML = "";
+
+  if(locked.length > 0) {
+    tickerLeftTrack.appendChild(buildTrophyList(locked));
+    tickerLeftTrack.style.animationDuration = speed(locked);
+    tickerLeftEl.classList.add("active");
+  } else {
+    tickerLeftEl.classList.remove("active");
+  }
+
+  if(unlocked.length > 0) {
+    tickerRightTrack.appendChild(buildTrophyList(unlocked));
+    tickerRightTrack.style.animationDuration = speed(unlocked);
+    tickerRightEl.classList.add("active");
+  } else {
+    tickerRightEl.classList.remove("active");
+  }
+}
+
+function hideTrophyTickers() {
+  tickerLeftEl.classList.remove("active");
+  tickerRightEl.classList.remove("active");
+  tickerLeftTrack.innerHTML = "";
+  tickerRightTrack.innerHTML = "";
+}
+
 // ─── BUILD GAME BLOCK ────────────────────────────────────
 
 function createGame(gameKey) {
@@ -1554,6 +1828,10 @@ function createGame(gameKey) {
     totalCount += s.bosses.length;
   });
   const totalPct = Math.round((totalDone / totalCount) * 100);
+
+  const trophies = game.trophies || [];
+  const trophyDone  = trophies.filter(t => t.completed).length;
+  const trophyTotal = trophies.length;
 
   // Wrapper
   const block = document.createElement("div");
@@ -1571,13 +1849,24 @@ function createGame(gameKey) {
   hName.className = "game-header-name";
   hName.textContent = game.name;
 
+  const statsWrap = document.createElement("div");
+  statsWrap.className = "game-header-stats";
+
+  if(trophyTotal > 0) {
+    const hTrophy = document.createElement("span");
+    hTrophy.className = "game-header-trophystat";
+    hTrophy.textContent = `${trophyDone}/${trophyTotal} Trophäen`;
+    statsWrap.appendChild(hTrophy);
+  }
+
   const hStat = document.createElement("span");
   hStat.className = "game-header-stat";
   hStat.innerHTML = `${totalDone}/${totalCount} Bosse<br>${totalPct}%`;
+  statsWrap.appendChild(hStat);
 
   header.appendChild(arrow);
   header.appendChild(hName);
-  header.appendChild(hStat);
+  header.appendChild(statsWrap);
   block.appendChild(header);
 
   // Content
@@ -1653,7 +1942,9 @@ function createGame(gameKey) {
       content.classList.add("open");
       header.classList.add("open");
       arrow.textContent = "▶";
+      showTrophyTickers(game);
     } else {
+      hideTrophyTickers();
     }
   });
 
