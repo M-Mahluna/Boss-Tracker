@@ -2444,16 +2444,7 @@ document.addEventListener("mousemove", e => {
   });
   document.querySelector(".bg-beam").style.left = (50 + mx * 3) + "%";
 });
-if (location.hash === "#datenschutz") {
-  const dsDetails = document.getElementById("datenschutz");
-  if (dsDetails) dsDetails.open = true;
-}
-document.querySelectorAll('a[href="#datenschutz"]').forEach(link => {
-  link.addEventListener("click", () => {
-    const dsDetails = document.getElementById("datenschutz");
-    if (dsDetails) dsDetails.open = true;
-  });
-});
+
 </script>
 </body>
 </html>
