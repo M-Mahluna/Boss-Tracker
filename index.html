@@ -654,6 +654,9 @@ body {
   line-height: 1.6;
 }
 
+#datenschutz summary::-webkit-details-marker { display: none; }
+#datenschutz summary { outline: none; }
+#datenschutz[open] summary::after { content: ""; }
 /* ═══════════════════════════════════════
    TROPHY TICKER (seitliche laufende Anzeige)
 ═══════════════════════════════════════ */
@@ -806,9 +809,9 @@ body {
 
 </div>
 </div>
-<section id="datenschutz" style="max-width:900px; margin:60px auto 0; padding:0 40px; position:relative; z-index:2;">
-  <div class="section-title">Datenschutzerklärung</div>
-  <div class="game-notes" style="white-space:pre-line;">
+<details id="datenschutz" style="max-width:900px; margin:60px auto 0; padding:0 40px; position:relative; z-index:2;">
+  <summary class="section-title" style="cursor:pointer; list-style:none;">Datenschutzerklärung ▶</summary>
+  <div class="game-notes" style="white-space:pre-line; margin-top:16px;">
 1. Verantwortlicher
 
 Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne der DSGVO ist die im <a href="https://mein.online-impressum.de/bombaster3k/" target="_blank" rel="noopener noreferrer">Impressum</a> genannte Person.
@@ -876,7 +879,7 @@ personenbezogenen Daten gegen die DSGVO verstößt.
 
 Diese Datenschutzerklärung wurde zuletzt am 21.09.2026 aktualisiert.
   </div>
-</section>
+</details>
 <footer id="site-footer">
   <a href="https://mein.online-impressum.de/bombaster3k/" target="_blank" rel="noopener noreferrer">Impressum</a>
   <span style="margin: 0 10px;">·</span>
@@ -2441,7 +2444,16 @@ document.addEventListener("mousemove", e => {
   });
   document.querySelector(".bg-beam").style.left = (50 + mx * 3) + "%";
 });
-
+if (location.hash === "#datenschutz") {
+  const dsDetails = document.getElementById("datenschutz");
+  if (dsDetails) dsDetails.open = true;
+}
+document.querySelectorAll('a[href="#datenschutz"]').forEach(link => {
+  link.addEventListener("click", () => {
+    const dsDetails = document.getElementById("datenschutz");
+    if (dsDetails) dsDetails.open = true;
+  });
+});
 </script>
 </body>
 </html>
